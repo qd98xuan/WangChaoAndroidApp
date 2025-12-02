@@ -1,0 +1,278 @@
+[
+  {
+    "id": "",
+    "name": "运动训练",
+    "items": [
+      {
+        "id": "",
+        "name": "热身",
+        "items": [
+          {
+            "id": "44",
+            "name": "全身热身",
+            "parentName": "热身",
+            "items": []
+          },
+          {
+            "id": "45",
+            "name": "上半身热身",
+            "parentName": "热身",
+            "items": []
+          }
+        ]
+      },
+      {
+        "id": "",
+        "name": "强化",
+        "items": [
+          {
+            "id": "46",
+            "name": "下肢深蹲",
+            "parentName": "强化",
+            "items": []
+          },
+          {
+            "id": "47",
+            "name": "上肢强化",
+            "parentName": "强化",
+            "items": []
+          },
+          {
+            "id": "48",
+            "name": "腹部训练",
+            "parentName": "强化",
+            "items": []
+          },
+          {
+            "id": "49",
+            "name": "平板支撑",
+            "parentName": "强化",
+            "items": []
+          }
+        ]
+      },
+      {
+        "id": "",
+        "name": "拉伸",
+        "items": [
+          {
+            "id": "50",
+            "name": "上肢拉伸",
+            "parentName": "拉伸",
+            "items": []
+          },
+          {
+            "id": "51",
+            "name": "大腿拉伸",
+            "parentName": "拉伸",
+            "items": []
+          }
+        ]
+      },
+      {
+        "id": "",
+        "name": "放松",
+        "items": [
+          {
+            "id": "52",
+            "name": "小腿放松",
+            "parentName": "放松",
+            "items": []
+          },
+          {
+            "id": "53",
+            "name": "腰部放松",
+            "parentName": "放松",
+            "items": []
+          },
+          {
+            "id": "54",
+            "name": "背部放松",
+            "parentName": "放松",
+            "items": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "",
+    "name": "亚健康保健",
+    "items": [
+      {
+        "id": "",
+        "name": "热身",
+        "items": [
+          {
+            "id": "55",
+            "name": "全身热身",
+            "parentName": "热身",
+            "items": []
+          },
+          {
+            "id": "56",
+            "name": "下肢热身",
+            "parentName": "热身",
+            "items": []
+          }
+        ]
+      },
+      {
+        "id": "",
+        "name": "强化",
+        "items": [
+          {
+            "id": "57",
+            "name": "平板支撑",
+            "parentName": "强化",
+            "items": []
+          },
+          {
+            "id": "58",
+            "name": "拉力带训练",
+            "parentName": "强化",
+            "items": []
+          }
+        ]
+      },
+      {
+        "id": "",
+        "name": "拉伸",
+        "items": [
+          {
+            "id": "59",
+            "name": "肩部与上肢",
+            "parentName": "拉伸",
+            "items": []
+          },
+          {
+            "id": "60",
+            "name": "脊柱拉伸",
+            "parentName": "拉伸",
+            "items": []
+          },
+          {
+            "id": "61",
+            "name": "臀大肌拉伸",
+            "parentName": "拉伸",
+            "items": []
+          },
+          {
+            "id": "62",
+            "name": "综合拉伸",
+            "parentName": "拉伸",
+            "items": []
+          }
+        ]
+      },
+      {
+        "id": "",
+        "name": "放松",
+        "items": [
+          {
+            "id": "63",
+            "name": "胸肌放松",
+            "parentName": "放松",
+            "items": []
+          },
+          {
+            "id": "64",
+            "name": "呼吸调整",
+            "parentName": "放松",
+            "items": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "",
+    "name": "老年人保健",
+    "items": [
+      {
+        "id": "",
+        "name": "热身",
+        "items": [
+          {
+            "id": "65",
+            "name": "上半身热身",
+            "parentName": "热身",
+            "items": []
+          },
+          {
+            "id": "66",
+            "name": "心肺热身",
+            "parentName": "热身",
+            "items": []
+          }
+        ]
+      },
+      {
+        "id": "",
+        "name": "强化",
+        "items": [
+          {
+            "id": "67",
+            "name": "下肢与腰部",
+            "parentName": "强化",
+            "items": []
+          },
+          {
+            "id": "68",
+            "name": "下肢平衡",
+            "parentName": "强化",
+            "items": []
+          },
+          {
+            "id": "69",
+            "name": "背式抬腿",
+            "parentName": "强化",
+            "items": []
+          }
+        ]
+      },
+      {
+        "id": "",
+        "name": "拉伸",
+        "items": [
+          {
+            "id": "70",
+            "name": "下肢拉伸",
+            "parentName": "拉伸",
+            "items": []
+          },
+          {
+            "id": "71",
+            "name": "肩部拉伸",
+            "parentName": "拉伸",
+            "items": []
+          },
+          {
+            "id": "72",
+            "name": "上肢拉伸",
+            "parentName": "拉伸",
+            "items": []
+          }
+        ]
+      },
+      {
+        "id": "",
+        "name": "放松",
+        "items": [
+          {
+            "id": "74",
+            "name": "呼吸调整",
+            "parentName": "放松",
+            "items": []
+          },
+          {
+            "id": "73",
+            "name": "全身放松",
+            "parentName": "放松",
+            "items": []
+          }
+        ]
+      }
+    ]
+  }
+]

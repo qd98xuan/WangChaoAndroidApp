@@ -1,0 +1,82 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+//kapt {
+//    arguments {
+//        arg("AROUTER_MODULE_NAME", project.getName())
+//    }
+//}
+
+android {
+    namespace 'com.hx.baselibrary'
+    compileSdk rootProject.ext.base.compileSdk
+
+    defaultConfig {
+        minSdk rootProject.ext.base.minSdk
+        targetSdk rootProject.ext.base.targetSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    //启用DataBinding
+    buildFeatures {
+        dataBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    //guava:guava
+    api 'com.google.guava:guava:27.0.1-android'
+
+    // compose
+    api(platform("androidx.compose:compose-bom:2023.03.00"))
+    api("androidx.activity:activity-compose:1.7.0")
+    api("androidx.compose.ui:ui")
+    api("androidx.compose.ui:ui-graphics")
+    api("androidx.compose.ui:ui-tooling-preview")
+    api("androidx.compose.material3:material3")
+
+    implementation 'com.google.guava:guava:27.0.1-android'
+    // retrofit
+    api "com.squareup.retrofit2:retrofit:$dep.retrofit"
+    // retrofit-gson
+    api "com.squareup.retrofit2:converter-gson:$dep.retrofit"
+    // logger
+    api "com.orhanobut:logger:$dep.logger"
+    // mmkv存储
+    api "com.tencent:mmkv-static:$dep.mmkv"
+    // permissionx
+    api "com.guolindev.permissionx:permissionx:$dep.permissionx"
+    // utilcodex
+    api "com.blankj:utilcodex:$dep.utilcodex"
+    // eventbus
+    api "org.greenrobot:eventbus:$dep.eventbus"
+    // viewModelScope
+//    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$dep.viewModelScope"
+    // lifecycleScope
+//    api "androidx.lifecycle:lifecycle-runtime-ktx:$dep.viewModelScope"
+    //日志打印
+    api "com.squareup.okhttp3:logging-interceptor:$dep.logging_interceptor"
+    api "io.github.vincent-series:sharp-retrofit:$dep.sharp_retrofit"
+    api "androidx.lifecycle:lifecycle-viewmodel-compose:$dep.lifecycle_viewmodel_compose"
+    api "com.github.getActivity:XXPermissions:$dep.xxpermission"
+    api "com.liulishuo.filedownloader:library:$dep.filedownloader"
+}

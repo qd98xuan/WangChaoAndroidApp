@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">NewStationEquipment</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+
+    <string name="face_recognition_login">人脸识别登陆</string>
+    <string name="quick_start">快速开始</string>
+    <string name="visitor_login">游客登陆</string>
+    <string name="wx_scan_in">微信扫一扫，进入小程序</string>
+    <string name="wx_scan_login">微信扫码登陆</string>
+    <string name="cumulative_duration">累计时长</string>
+    <string name="mileage">累计里程</string>
+    <string name="cumulative_consumption">累计消耗</string>
+    <string name="weight_plates">标准模式</string>
+    <string name="isotonic">等阻模式</string>
+    <string name="isoknetic">等速模式</string>
+    <string name="view_training_plan">查看训练计划</string>
+    <string name="speed">速度</string>
+    <string name="hight">高度</string>
+    <string name="frequency">次数</string>
+    <string name="heat">热量</string>
+    <string name="gear">档位</string>
+    <string name="heart_rate">心率</string>
+    <string name="start_exercising">开始运动</string>
+    <string name="end_of_movement">结束运动</string>
+    <string name="keep_moving">继续运动</string>
+    <string name="duration">时长</string>
+    <string name="total_times">总次数</string>
+
+    <!--没有计划的弹窗-->
+    <string name="free_training">自由训练</string>
+    <string name="cancel_training">取消训练</string>
+    <string name="no_trainting_message">该设备不存在今日训练计划里，是否要进行自由训练？</string>
+
+    <!--    拉伸器械-->
+    <string name="centrifugal_mode">离心模式</string>
+    <string name="constant_speed_mode">等速模式</string>
+    <string name="elastic_mode">弹力模式</string>
+
+
+</resources>

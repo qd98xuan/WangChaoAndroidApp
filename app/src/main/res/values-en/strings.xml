@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">NewStationEquipment</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">confirm</string>
+
+    <string name="face_recognition_login">Face login</string>
+    <string name="quick_start">QuickStart</string>
+    <string name="visitor_login">Visitor login</string>
+    <string name="wx_scan_in">微信扫一扫，进入小程序</string>
+    <string name="wx_scan_login">微信扫码登陆</string>
+    <string name="cumulative_duration">Duration</string>
+    <string name="mileage">Mileage</string>
+    <string name="cumulative_consumption">Calories</string>
+    <string name="weight_plates">Weight Plates</string>
+    <string name="isotonic">Isotonic</string>
+    <string name="isoknetic">Isoknetic</string>
+    <string name="view_training_plan">View Training Plan</string>
+    <string name="speed">Speed</string>
+    <string name="hight">High</string>
+    <string name="frequency">Freq.</string>
+    <string name="heat">Heat</string>
+    <string name="gear">Gear</string>
+    <string name="heart_rate">heart rate</string>
+    <string name="start_exercising">START</string>
+    <string name="end_of_movement">STOP</string>
+    <string name="keep_moving">CONTINUE</string>
+    <string name="duration">duration</string>
+    <string name="total_times">Total times</string>
+
+    <!--没有计划的弹窗-->
+    <string name="free_training">Free training</string>
+    <string name="cancel_training">Cancel</string>
+    <string name="no_trainting_message">The device does not exist in today\'s training plan. Do you want to do free training?</string>
+
+    <!--    拉伸器械-->
+    <string name="centrifugal_mode">Eccentric</string>
+    <string name="constant_speed_mode">Isoknetic</string>
+    <string name="elastic_mode">Springs</string>
+
+
+</resources>
