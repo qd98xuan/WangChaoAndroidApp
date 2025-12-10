@@ -1,5 +1,6 @@
 package com.hx.wangchao.activitys
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -17,15 +18,10 @@ import androidx.compose.ui.unit.sp
 class SplashActivity : BaseAppActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        startActivity(Intent(this, MainActivity::class.java))
         setContent {
             Box(modifier = Modifier.fillMaxSize()) {
-                Text(
-                    "电光演示系统",
-                    fontSize = 30.sp,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 100.dp)
-                )
+
 
             }
 

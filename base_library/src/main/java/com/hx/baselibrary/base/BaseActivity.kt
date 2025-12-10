@@ -1,5 +1,6 @@
 package com.hx.baselibrary.base
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -30,32 +31,9 @@ open class BaseActivity : ComponentActivity() {
  * convertSize(ScreenType.ScreenTypeBig)
  */
 fun Number.convertSize(): Dp {
-    return when (ScreenUtils.getAppScreenWidth()) {
-        1280 -> {
-            this.toInt().dp
-        }
-
-        1920 -> {
-            (this.toInt() * 1.4).dp
-        }
-
-        480 -> {
-            (this.toInt() * 0.37).dp
-        }
-
-        else -> {
-            this.toInt().dp
-        }
-    }
-//    when (screenType) {
-//        ScreenType.ScreenTypeSmall -> {
-//            return this.toInt().dp
-//        }
-//
-//        ScreenType.ScreenTypeBig -> {
-//            return (this.toInt() * 1.4).dp
-//        }
-//    }
+    val densityDpi = Resources.getSystem().displayMetrics.densityDpi
+    val scale = densityDpi / 1080f
+    return (this.toFloat() * scale).dp
 }
 
 /**
@@ -63,31 +41,9 @@ fun Number.convertSize(): Dp {
  * convertSpSize(ScreenType.ScreenTypeBig)
  */
 fun Number.convertSpSize(): TextUnit {
-    return when (ScreenUtils.getAppScreenWidth()) {
-        1280 -> {
-            this.toInt().sp
-        }
-
-        1920 -> {
-            (this.toInt() * 1.4).sp
-        }
-
-        480 -> {
-            (this.toInt() * 0.37).sp
-        }
-
-        else -> {
-            this.toInt().sp
-        }
-    }
-//    when(screenType) {
-//        ScreenType.ScreenTypeSmall->{
-//            return this.toInt().sp
-//        }
-//        ScreenType.ScreenTypeBig->{
-//            return (this.toInt()*1.4).sp
-//        }
-//    }
+    val densityDpi = Resources.getSystem().displayMetrics.densityDpi
+    val scale = densityDpi / 1080f
+    return (this.toFloat() * scale).sp
 }
 
 

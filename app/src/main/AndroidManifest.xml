@@ -25,7 +25,7 @@
         <meta-data
             android:name="ScopedStorage"
             android:value="true" />
-
+        <activity android:name=".activitys.MainActivity" android:exported="false" />
         <activity
             android:name=".activitys.SplashActivity"
             android:exported="true"

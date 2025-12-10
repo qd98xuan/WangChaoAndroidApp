@@ -8,7 +8,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import cn.huidu.toolkit.HuiduTech
-import com.hx.baselibrary.CPU_CORE
 import com.hx.baselibrary.Constants
 import com.hx.baselibrary.base.BaseActivity
 import com.hx.baselibrary.exception.AppCrashHandler
@@ -48,16 +47,5 @@ class BaseApplication : Application(), LifecycleOwner {
         // 自动开启服务
         isStartService = true
 
-        if (Constants.KEY_CPU_CORE==CPU_CORE.LZTEK) {
-//            val lztek = Lztek.create(this)
-//            lztek.hideNavigationBar()
-//            lztek.navigationBarSlideShow(false)
-        } else if (Constants.KEY_CPU_CORE==CPU_CORE.HUIDUTEK) {
-            val huiduTech = HuiduTech(this)
-            huiduTech.showStatusBar(false)
-            huiduTech.showNavigationBar(false)
-        } else {
-
-        }
     }
 }
