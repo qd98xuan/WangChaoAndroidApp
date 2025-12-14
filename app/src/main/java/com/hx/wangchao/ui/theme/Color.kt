@@ -13,3 +13,11 @@ val Pink40 = Color(0xFF7D5260)
 val c_047B83 = Color(0xFF047B83)
 
 val c_666666 = Color(0xFF666666)
+
+val c_333333 = Color(0xFF333333)
+
+val c_E5E5E5 = Color(0xFFE5E5E5)
+
+val c_9BCACD = Color(0xFF9BCACD)
+
+val c_999999 = Color(0xFF999999)

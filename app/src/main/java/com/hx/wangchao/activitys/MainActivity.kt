@@ -38,6 +38,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.hx.baselibrary.base.convertSize
 import com.hx.baselibrary.base.convertSpSize
 import com.hx.wangchao.R
+import com.hx.wangchao.activitys.toDoList.ActivateDialog
+import com.hx.wangchao.activitys.toDoList.DelayDialog
+import com.hx.wangchao.activitys.toDoList.RollCallDialog
+import com.hx.wangchao.activitys.toDoList.RollcallItem
 import com.hx.wangchao.activitys.toDoList.ToDoList
 import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_666666
@@ -61,25 +65,30 @@ class MainActivity : BaseAppActivity() {
             LaunchedEffect(selectIndex) {
                 title = mainViewModel.navList[selectIndex].title
             }
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                StatusBar(modifier = Modifier, title)
-                ToDoList(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f, fill = true)
-                )
-
-                Navigation(
-                    modifier = Modifier
-                        .height(158.convertSize()),
-                    selectColor = c_047B83,
-                    defaultColor = c_666666
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    selectIndex = it
+                    StatusBar(modifier = Modifier, title)
+                    ToDoList(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f, fill = true)
+                    )
+
+                    Navigation(
+                        modifier = Modifier
+                            .height(158.convertSize()),
+                        selectColor = c_047B83,
+                        defaultColor = c_666666
+                    ) {
+                        selectIndex = it
+                    }
                 }
+//                ActivateDialog(modifier = Modifier.align(Alignment.BottomCenter))
+//                DelayDialog(modifier = Modifier.align(Alignment.BottomCenter))
+                RollCallDialog(modifier = Modifier)
             }
         }
     }
