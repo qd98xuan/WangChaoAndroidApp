@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import com.hx.baselibrary.base.convertSize
 import com.hx.baselibrary.base.convertSpSize
 import com.hx.wangchao.R
+import com.hx.wangchao.activitys.TextFieldMain
 import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_333333
 import com.hx.wangchao.ui.theme.c_999999
@@ -340,39 +341,8 @@ fun SearchView(modifier: Modifier, hintText: String, onClick: () -> Unit) {
         var input by remember {
             mutableStateOf("")
         }
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .height(104.convertSize())
-                .border(
-                    width = 3.convertSize(),
-                    color = c_9BCACD,
-                    shape = RoundedCornerShape(12.convertSize())
-                )
-        ) {
-            if (input == "") {
-                Text(
-                    hintText,
-                    color = c_999999,
-                    fontSize = 37.convertSpSize(),
-                    modifier = Modifier
-                        .align(
-                            Alignment.CenterStart
-                        )
-                        .padding(start = 35.convertSize())
-                )
-            }
-            BasicTextField(
-                input, onValueChange = {
-                    input = it
-                }, modifier = Modifier
-                    .fillMaxWidth()
-                    .align(
-                        Alignment.CenterStart
-                    )
-                    .padding(start = 35.convertSize()), singleLine = true,
-                textStyle = TextStyle(fontSize = 37.convertSpSize(), color = c_333333),
-            )
+        TextFieldMain(modifier = Modifier.weight(1f),hintText) {
+            input = it
         }
 
         Image(

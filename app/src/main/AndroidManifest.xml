@@ -42,6 +42,7 @@
         </activity>
 
         <activity android:name=".activitys.BaseAppActivity" android:exported="false" />
+        <activity android:name=".activitys.LoginActivity" android:exported="false" />
 
 
     </application>

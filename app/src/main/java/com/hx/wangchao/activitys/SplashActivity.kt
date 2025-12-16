@@ -31,7 +31,8 @@ class SplashActivity : BaseAppActivity() {
         setContent {
             LaunchedEffect(true) {
                 delay(3000)
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+//                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
             }
             Box(
                 modifier = Modifier
