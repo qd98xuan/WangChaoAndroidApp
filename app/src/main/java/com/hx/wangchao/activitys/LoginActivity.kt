@@ -266,13 +266,24 @@ fun RegisterView(modifier: Modifier) {
             item {
                 when(part) {
                     1->{
-                        PartOne(modifier = Modifier)
+                        PartOne(modifier = Modifier) {
+                            part = 2
+                        }
                     }
                     2->{
-                        PartTwo(modifier = Modifier)
+                        PartTwo(modifier = Modifier, onLastClick = {
+                            part = 1
+                        }, onNextClick = {
+                            part = 3
+                        })
                     }
                     3->{
-                        PartThree(modifier = Modifier)
+                        PartThree(modifier = Modifier, onLastClick = {
+                            part = 2
+                        }, onNextClick = {
+                            // 注册完成，返回登录页
+                            part = 1
+                        })
                     }
                 }
             }
