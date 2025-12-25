@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.lifecycle.ViewModelProvider
+import com.blankj.utilcode.util.ToastUtils
 import com.hx.baselibrary.base.convertSize
 import com.hx.baselibrary.base.convertSpSize
 import com.hx.wangchao.R
@@ -45,14 +48,25 @@ import com.hx.wangchao.ui.theme.c_333333
 import com.hx.wangchao.ui.theme.c_999999
 import com.hx.wangchao.ui.theme.c_9BCACD
 import com.hx.wangchao.ui.theme.c_C1DFE1
+import com.hx.wangchao.viewModels.LoginViewmodel
 
 /**
  * 登录页
  */
 class LoginActivity : BaseAppActivity() {
+    val loginViewmodel by lazy { ViewModelProvider(this)[LoginViewmodel::class.java] }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val loginSuccess by remember {
+                loginViewmodel.loginSuccess
+            }
+            LaunchedEffect(loginSuccess) {
+                if (loginSuccess) {
+                    // 登录成功，跳转主页面
+                    ToastUtils.showShort("登录成功")
+                }
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -100,7 +114,8 @@ class LoginActivity : BaseAppActivity() {
                         top = 101.convertSize(),
                         start = 35.convertSize(),
                         end = 35.convertSize()
-                    )
+                    ),
+                    loginViewmodel
                 )
             }
         }
@@ -108,7 +123,7 @@ class LoginActivity : BaseAppActivity() {
 }
 
 @Composable
-fun LoginBox(modifier: Modifier) {
+fun LoginBox(modifier: Modifier, loginViewmodel: LoginViewmodel) {
     // 模式是注册还是登录
     var mode by remember {
         mutableStateOf("登录")
@@ -138,7 +153,7 @@ fun LoginBox(modifier: Modifier) {
                     })
         }
         if (mode == "登录") {
-            LoginView(modifier = Modifier)
+            LoginView(modifier = Modifier, loginViewmodel)
         } else {
             RegisterView(modifier = Modifier)
         }
@@ -147,7 +162,16 @@ fun LoginBox(modifier: Modifier) {
 
 // 登录视图
 @Composable
-fun LoginView(modifier: Modifier) {
+fun LoginView(modifier: Modifier, loginViewmodel: LoginViewmodel) {
+    var tenant by remember {
+        loginViewmodel.tenant
+    }
+    var username by remember {
+        loginViewmodel.username
+    }
+    var password by remember {
+        loginViewmodel.password
+    }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -171,8 +195,11 @@ fun LoginView(modifier: Modifier) {
                 top = 12.convertSize(),
                 end = 35.convertSize()
             ),
-            "如:WC-2025-001"
-        ) { }
+            "如:WC-2025-001",
+            tenant
+        ) {
+            tenant = it
+        }
         Text(
             "手机号",
             fontSize = 40.convertSpSize(),
@@ -189,14 +216,19 @@ fun LoginView(modifier: Modifier) {
                 top = 12.convertSize(),
                 end = 35.convertSize()
             ),
-            "请输入手机号"
-        ) { }
+            "请输入手机号",
+            username
+        ) {
+            username = it
+        }
         Row(
-            modifier = Modifier.padding(
-                start = 40.convertSize(),
-                end = 37.convertSize(),
-                top = 35.convertSize()
-            ).fillMaxWidth(),
+            modifier = Modifier
+                .padding(
+                    start = 40.convertSize(),
+                    end = 37.convertSize(),
+                    top = 35.convertSize()
+                )
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -216,8 +248,11 @@ fun LoginView(modifier: Modifier) {
                 top = 12.convertSize(),
                 end = 35.convertSize()
             ),
-            "请输入登录密码"
-        ) { }
+            "请输入登录密码",
+            password
+        ) {
+            password = it
+        }
 
         Box(
             modifier = Modifier
@@ -230,6 +265,9 @@ fun LoginView(modifier: Modifier) {
                 .fillMaxWidth()
                 .height(127.convertSize())
                 .background(color = c_047B83, shape = RoundedCornerShape(29.convertSize()))
+                .clickable {
+                    loginViewmodel.login()
+                }
         ) {
             Text(
                 "登 录",
@@ -264,20 +302,22 @@ fun RegisterView(modifier: Modifier) {
         }
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             item {
-                when(part) {
-                    1->{
+                when (part) {
+                    1 -> {
                         PartOne(modifier = Modifier) {
                             part = 2
                         }
                     }
-                    2->{
+
+                    2 -> {
                         PartTwo(modifier = Modifier, onLastClick = {
                             part = 1
                         }, onNextClick = {
                             part = 3
                         })
                     }
-                    3->{
+
+                    3 -> {
                         PartThree(modifier = Modifier, onLastClick = {
                             part = 2
                         }, onNextClick = {
@@ -293,9 +333,14 @@ fun RegisterView(modifier: Modifier) {
 }
 
 @Composable
-fun TextFieldMain(modifier: Modifier, hintText: String, onValueChange: (String) -> Unit) {
+fun TextFieldMain(
+    modifier: Modifier,
+    hintText: String,
+    text: String = "",
+    onValueChange: (String) -> Unit
+) {
     var input by remember {
-        mutableStateOf("")
+        mutableStateOf(text)
     }
     Box(
         modifier = modifier

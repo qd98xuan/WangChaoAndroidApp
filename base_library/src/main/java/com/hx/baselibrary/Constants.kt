@@ -2,8 +2,7 @@ package com.hx.baselibrary
 
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import com.blankj.utilcode.util.DeviceUtils
-import com.google.gson.Gson
+import com.hx.baselibrary.BuildConfig.DEBUG
 import com.hx.baselibrary.mmkv.MMKVUtils
 
 /**
@@ -12,13 +11,19 @@ import com.hx.baselibrary.mmkv.MMKVUtils
 class Constants {
     companion object {
         // 域名的
-        private const val BASE_URL_DEBUG = "http://health.triplemaster.com"
 
-        const val BASE_URL_DEBUG_8097 = BASE_URL_DEBUG
-        const val BASE_URL_DEBUG_8095 = BASE_URL_DEBUG
+        // 测试环境地址
+        private const val BASE_URL_DEBUG = "https://octopus-app.3ilink.cn"
+
+        // 线上环境地址
+        private const val BASE_URL_RELEASE = "http://prod-cn.your-api-server.com"
+
+        var BASE_URL = if (DEBUG) BASE_URL_DEBUG else BASE_URL_RELEASE
 
         // 用户token
         const val KEY_TOKEN = "KEY_TOKEN"
+
+        const val KEY_AES = "thanks,pig4cloud"
 
         fun getUserToken() =
             "Bearer ${MMKVUtils.getString(KEY_TOKEN) ?: ""}"

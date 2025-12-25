@@ -20,6 +20,7 @@ class MainViewModel: ViewModel() {
     var title = mutableStateOf("")
     // 当前页面用户名
     var userName = mutableStateOf("XXX")
+
 }
 data class NavItem(
     val title: String,

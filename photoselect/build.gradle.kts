@@ -42,7 +42,7 @@ android {
 
     // Kotlin compiler extension for Compose (1.4.x line compatible with Kotlin 1.8.x)
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.8"
+        kotlinCompilerExtensionVersion = "1.4.3"
     }
 }
 

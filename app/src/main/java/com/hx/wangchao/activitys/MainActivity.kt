@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,6 +45,7 @@ import com.hx.wangchao.activitys.toDoList.DelayDialog
 import com.hx.wangchao.activitys.toDoList.RollCallDialog
 import com.hx.wangchao.activitys.toDoList.RollcallItem
 import com.hx.wangchao.activitys.toDoList.ToDoList
+import com.hx.wangchao.activitys.toDoList.TodoTask
 import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_666666
 import com.hx.wangchao.utils.main
@@ -70,12 +73,19 @@ class MainActivity : BaseAppActivity() {
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    StatusBar(modifier = Modifier, title)
-                    ToDoList(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, fill = true)
-                    )
+//                    ToDoList(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .weight(1f, fill = true),
+//                        mainViewModel
+//                    )
+                    val userName by remember {
+                        mainViewModel.userName
+                    }
+                    TodoTask(modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = true),
+                        userName = userName)
 
                     Navigation(
                         modifier = Modifier
@@ -88,59 +98,8 @@ class MainActivity : BaseAppActivity() {
                 }
 //                ActivateDialog(modifier = Modifier.align(Alignment.BottomCenter))
 //                DelayDialog(modifier = Modifier.align(Alignment.BottomCenter))
-                RollCallDialog(modifier = Modifier)
+//                RollCallDialog(modifier = Modifier)
             }
-        }
-    }
-
-    /**
-     * 状态栏
-     */
-    @Composable
-    fun StatusBar(modifier: Modifier, title: String) {
-        Box(
-            modifier = modifier
-                .background(color = c_047B83)
-                .fillMaxWidth()
-                .height(156.convertSize())
-        ) {
-            val userName by remember {
-                mainViewModel.userName
-            }
-            Text(
-                title,
-                color = Color.White,
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(start = 92.convertSize()),
-                fontSize = 46.convertSpSize()
-            )
-            Text(
-                "望潮教培助手",
-                color = Color.White,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 23.convertSize(), end = 170.convertSize()),
-                fontSize = 46.convertSpSize()
-            )
-            Text(
-                text = "辛苦了！${userName}",
-                color = Color.White,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 29.convertSize(), end = 170.convertSize()),
-                fontSize = 35.convertSpSize()
-            )
-            Image(
-                painterResource(R.drawable.me),
-                contentDescription = "avatar",
-                modifier = Modifier
-                    .size(0.convertSize())
-                    .align(
-                        Alignment.CenterEnd
-                    )
-                    .padding(end = 29.convertSize())
-            )
         }
     }
 
@@ -210,5 +169,72 @@ class MainActivity : BaseAppActivity() {
                 color = if (isSelected) selectColor else defaultColor
             )
         }
+    }
+}
+
+/**
+ * 状态栏
+ */
+@Composable
+fun StatusBar(
+    modifier: Modifier,
+    title: String,
+    userName: String,
+    showBack: Boolean = false,
+    onBackClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .background(color = c_047B83)
+            .fillMaxWidth()
+            .height(156.convertSize())
+    ) {
+        if (showBack) {
+            Image(
+                painterResource(R.drawable.back_btn), contentDescription = "back",
+                modifier = Modifier
+                    .padding(start = 40.convertSize())
+                    .width(26.convertSize())
+                    .height(49.convertSize())
+                    .align(Alignment.CenterStart)
+                    .clickable {
+                        onBackClick()
+                    }
+            )
+        }
+        Text(
+            title,
+            color = Color.White,
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 92.convertSize()),
+            fontSize = 46.convertSpSize()
+        )
+        Text(
+            "望潮教培助手",
+            color = Color.White,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 23.convertSize(), end = 170.convertSize()),
+            fontSize = 46.convertSpSize()
+        )
+        Text(
+            text = "辛苦了！${userName}",
+            color = Color.White,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 29.convertSize(), end = 170.convertSize()),
+            fontSize = 35.convertSpSize()
+        )
+        Image(
+            painterResource(R.drawable.me),
+            contentDescription = "avatar",
+            modifier = Modifier
+                .size(0.convertSize())
+                .align(
+                    Alignment.CenterEnd
+                )
+                .padding(end = 29.convertSize())
+        )
     }
 }

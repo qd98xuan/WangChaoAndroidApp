@@ -48,49 +48,17 @@ android {
             keyPassword = "sanbaishuo123"
         }
     }
-
     buildTypes {
         release {
+            buildConfigField("boolean","DEBUG","false")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-//            buildConfigField("int", "DEVICE_TYPE", "0")
-//            // 液压缸
-//            buildConfigField("int", "HYDRAULIC_CYLINDER", "0")
-//            // 电缸
-//            buildConfigField("int", "ELECTRIC_CYLINDER", "1")
-//            // 律动机
-//            buildConfigField("int", "RHYTHMIC_MOTIVATION", "2")
-//            // 盘式电机
-//            buildConfigField("int", "DISC_MOTOR", "3")
-//            // 上下肢主被动
-//            buildConfigField("int", "UPPER_AND_LOWER_LIMBS", "4")
-//            // 串口配置
-//            buildConfigField("String", "SERIAL_PORT_CONFIG", "\"dev/ttyS7\"")
-//            // 串口波特率配置
-//            buildConfigField("int", "SERIAL_PORT_BAUDRATE", "9600")
         }
         debug {
-//            buildConfigField("int", "DEVICE_TYPE", "2")
-//            // 液压缸
-//            buildConfigField("int", "HYDRAULIC_CYLINDER", "0")
-//            // 电缸
-//            buildConfigField("int", "ELECTRIC_CYLINDER", "1")
-//            // 律动机
-//            buildConfigField("int", "RHYTHMIC_MOTIVATION", "2")
-//            // 盘式电机
-//            buildConfigField("int", "DISC_MOTOR", "3")
-//            // 上下肢主被动
-//            buildConfigField("int", "UPPER_AND_LOWER_LIMBS", "4")
-//            // 串口配置
-//            buildConfigField("String", "SERIAL_PORT_CONFIG", "\"dev/ttyS7\"")
-//            // 串口波特率配置
-//            // 律动机 9600
-//            // 伺服电机 115200
-//            // 电缸
-//            buildConfigField("int", "SERIAL_PORT_BAUDRATE", "9600")
+            buildConfigField("boolean","DEBUG","true")
         }
     }
     compileOptions {

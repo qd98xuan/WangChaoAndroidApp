@@ -23,6 +23,7 @@ android {
     //启用DataBinding
     buildFeatures {
         dataBinding true
+        buildConfig true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -30,6 +31,14 @@ android {
     }
     kotlinOptions {
         jvmTarget = '17'
+    }
+    buildTypes {
+        release {
+            buildConfigField("boolean","DEBUG","false")
+        }
+        debug {
+            buildConfigField("boolean","DEBUG","true")
+        }
     }
 }
 

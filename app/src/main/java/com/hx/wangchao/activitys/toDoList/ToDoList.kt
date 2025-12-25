@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import com.hx.baselibrary.base.convertSize
 import com.hx.baselibrary.base.convertSpSize
 import com.hx.wangchao.R
+import com.hx.wangchao.activitys.StatusBar
 import com.hx.wangchao.activitys.TextFieldMain
 import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_333333
@@ -42,13 +43,23 @@ import com.hx.wangchao.ui.theme.c_999999
 import com.hx.wangchao.ui.theme.c_9BCACD
 import com.hx.wangchao.ui.theme.c_E5E5E5
 import com.hx.wangchao.utils.ScreenUtils.px
+import com.hx.wangchao.viewModels.MainViewModel
 
 /**
  * 待办页面
  */
 @Composable
-fun ToDoList(modifier: Modifier) {
+fun ToDoList(modifier: Modifier,mainViewModel: MainViewModel) {
     Column(modifier = modifier) {
+        val userName by remember {
+            mainViewModel.userName
+        }
+        val title by remember {
+            mainViewModel.title
+        }
+        StatusBar(modifier = Modifier, title, userName) {
+
+        }
         MainTiele(
             modifier = Modifier,
             icon = R.drawable.book_mark,
