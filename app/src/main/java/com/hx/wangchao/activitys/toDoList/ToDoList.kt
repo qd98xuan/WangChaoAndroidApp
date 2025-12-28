@@ -49,7 +49,7 @@ import com.hx.wangchao.viewModels.MainViewModel
  * 待办页面
  */
 @Composable
-fun ToDoList(modifier: Modifier,mainViewModel: MainViewModel) {
+fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel) {
     Column(modifier = modifier) {
         val userName by remember {
             mainViewModel.userName
@@ -61,7 +61,7 @@ fun ToDoList(modifier: Modifier,mainViewModel: MainViewModel) {
 
         }
         MainTiele(
-            modifier = Modifier,
+            modifier = Modifier.padding(start = 40.convertSize(), top = 72.convertSize()),
             icon = R.drawable.book_mark,
             title = "今日课程"
         )
@@ -89,7 +89,10 @@ fun ToDoList(modifier: Modifier,mainViewModel: MainViewModel) {
             icon = R.drawable.group,
             title = "客户关系"
         )
-        SearchView(modifier = Modifier.padding(start = 35.convertSize(), end = 35.convertSize()), "请输入学生姓名进行查询") {
+        SearchView(
+            modifier = Modifier.padding(start = 35.convertSize(), end = 35.convertSize()),
+            "请输入学生姓名进行查询"
+        ) {
 
         }
         CustomerRelationItem(
@@ -352,7 +355,7 @@ fun SearchView(modifier: Modifier, hintText: String, onClick: () -> Unit) {
         var input by remember {
             mutableStateOf("")
         }
-        TextFieldMain(modifier = Modifier.weight(1f),hintText) {
+        TextFieldMain(modifier = Modifier.weight(1f), hintText) {
             input = it
         }
 

@@ -23,7 +23,11 @@ class Constants {
         // 用户token
         const val KEY_TOKEN = "KEY_TOKEN"
 
+        const val KEY_REFRESH_TOKEN = "KEY_REFRESH_TOKEN"
+
         const val KEY_AES = "thanks,pig4cloud"
+
+        const val KEY_USER_INFO = "KEY_USER_INFO"
 
         fun getUserToken() =
             "Bearer ${MMKVUtils.getString(KEY_TOKEN) ?: ""}"

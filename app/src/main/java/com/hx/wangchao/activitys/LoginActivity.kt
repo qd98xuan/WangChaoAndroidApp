@@ -1,5 +1,6 @@
 package com.hx.wangchao.activitys
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -65,6 +66,8 @@ class LoginActivity : BaseAppActivity() {
                 if (loginSuccess) {
                     // 登录成功，跳转主页面
                     ToastUtils.showShort("登录成功")
+                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    finish()
                 }
             }
             Column(

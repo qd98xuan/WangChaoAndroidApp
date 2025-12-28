@@ -1,6 +1,7 @@
 package com.hx.wangchao.api
 
 import com.hx.baselibrary.network.BaseResponse
+import com.hx.wangchao.Entity.Login
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.Header
@@ -19,6 +20,6 @@ interface ApiService {
         @Query("tenant")tenant: String,
         @Query("username")username: String,
         @Query("password")password: String,
-    ): Flow<Response<BaseResponse<String>>>
+    ): Flow<Response<BaseResponse<Login>>>
 
 }

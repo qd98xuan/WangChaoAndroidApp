@@ -11,6 +11,8 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val c_047B83 = Color(0xFF047B83)
+val c_10047B83 = Color(0x1A047B83)
+val c_01047B83 = Color(0x03047B83)
 
 val c_666666 = Color(0xFF666666)
 

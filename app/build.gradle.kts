@@ -23,8 +23,8 @@ android {
         minSdk = 21
         targetSdk = 34
 
-        versionCode = 48
-        versionName = "3.9.9"
+        versionCode = 1
+        versionName = "1.0.0"
 
 //        versionCode = 1
 //        versionName = "1.0"
@@ -88,8 +88,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.7.0")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    implementation(files("libs/sdkapi.jar"))
-    implementation(files("libs/toolbox.jar"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

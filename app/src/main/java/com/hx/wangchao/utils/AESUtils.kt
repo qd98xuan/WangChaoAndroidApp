@@ -1,7 +1,7 @@
 package com.hx.wangchao.utils
 
-import java.security.SecureRandom
-import java.util.Base64
+import android.util.Base64
+import com.hx.baselibrary.Constants
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -14,21 +14,25 @@ import javax.crypto.spec.SecretKeySpec
  *
  */
 class AESUtils {
-    fun encrypt(data: String, key: String): String {
-        val keyBytes = ByteArray(16)
-        val kb = key.toByteArray(Charsets.UTF_8)
-        System.arraycopy(kb, 0, keyBytes, 0, Math.min(kb.size, keyBytes.size))
-        val secretKey = SecretKeySpec(keyBytes, "AES")
+    private val ALGORITHM = "AES/CFB/NoPadding"
+    fun encrypt(pwd: String): String {
+        // 将密钥转换为字节数组
+        val keyBytes = Constants.KEY_AES.toByteArray(Charsets.ISO_8859_1)
 
-        // 使用固定的 IV，例如全 0，或者由 key 派生
-        val iv = ByteArray(16) // 默认全为 0
-        val ivSpec = IvParameterSpec(iv)
+        // 创建密钥规范（AES 需要 16/24/32 字节，这里使用前 16 字节）
+        val secretKey = SecretKeySpec(keyBytes. copyOf(16), "AES")
 
-        val cipher = Cipher.getInstance("AES/CFB/NoPadding")
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec)
-        val encrypted = cipher.doFinal(data.toByteArray(Charsets.UTF_8))
+        // IV 使用与密钥相同的值
+        val iv = IvParameterSpec(keyBytes.copyOf(16))
 
-        // 不需要再拼接 IV 了，因为 IV 是固定的
-        return android.util.Base64.encodeToString(encrypted, android.util.Base64.NO_WRAP)
+        // 初始化加密器
+        val cipher = Cipher.getInstance(ALGORITHM)
+        cipher.init(Cipher. ENCRYPT_MODE, secretKey, iv)
+
+        // 执行加密
+        val encrypted = cipher.doFinal(pwd. toByteArray(Charsets.UTF_8))
+
+        // 返回 Base64 编码的结果
+        return Base64.encodeToString(encrypted, Base64.NO_WRAP)
     }
 }

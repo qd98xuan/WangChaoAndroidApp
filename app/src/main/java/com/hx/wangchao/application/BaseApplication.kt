@@ -7,8 +7,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
-import cn.huidu.toolkit.HuiduTech
-import com.hx.baselibrary.Constants
 import com.hx.baselibrary.base.BaseActivity
 import com.hx.baselibrary.exception.AppCrashHandler
 import com.liulishuo.filedownloader.FileDownloader

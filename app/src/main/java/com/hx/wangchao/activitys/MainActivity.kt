@@ -82,10 +82,13 @@ class MainActivity : BaseAppActivity() {
                     val userName by remember {
                         mainViewModel.userName
                     }
+                    val todoTaskList = remember {
+                        mainViewModel.todoTaskList
+                    }
                     TodoTask(modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f, fill = true),
-                        userName = userName)
+                        userName = userName,todoTaskList)
 
                     Navigation(
                         modifier = Modifier
