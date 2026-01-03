@@ -50,6 +50,7 @@ import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_666666
 import com.hx.wangchao.utils.main
 import com.hx.wangchao.viewModels.MainViewModel
+import com.hx.wangchao.viewModels.TodoPageDialogType
 import com.hx.wangchao.viewModels.TodoViewModel
 
 /**
@@ -102,9 +103,22 @@ class MainActivity : BaseAppActivity() {
                         selectIndex = it
                     }
                 }
-//                ActivateDialog(modifier = Modifier.align(Alignment.BottomCenter))
-//                DelayDialog(modifier = Modifier.align(Alignment.BottomCenter))
-//                RollCallDialog(modifier = Modifier)
+                val todoPageDialogType by remember {
+                    mainViewModel.todoPageDialogType
+                }
+                when(todoPageDialogType) {
+                    TodoPageDialogType.TYPE_ACTIVATE -> {
+                        ActivateDialog(modifier = Modifier.align(Alignment.BottomCenter),mainViewModel)
+                    }
+                    TodoPageDialogType.TYPE_DELAY -> {
+                        DelayDialog(modifier = Modifier.align(Alignment.BottomCenter))
+                    }
+                    TodoPageDialogType.TYPE_ROLLCALL -> {
+                        RollCallDialog(modifier = Modifier)
+                    }
+
+                    else -> {}
+                }
             }
         }
     }

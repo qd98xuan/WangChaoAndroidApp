@@ -46,6 +46,7 @@ import com.hx.wangchao.ui.theme.c_9BCACD
 import com.hx.wangchao.ui.theme.c_E5E5E5
 import com.hx.wangchao.utils.ScreenUtils.px
 import com.hx.wangchao.viewModels.MainViewModel
+import com.hx.wangchao.viewModels.TodoPageDialogType
 import com.hx.wangchao.viewModels.TodoViewModel
 
 /**
@@ -76,13 +77,17 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 MainTiele(
-                    modifier = Modifier.padding(start = 40.convertSize(), top = 72.convertSize()),
+                    modifier = Modifier.padding(
+                        start = 40.convertSize(),
+                        top = 72.convertSize(),
+                        bottom = 20.convertSize()
+                    ),
                     icon = R.drawable.book_mark,
                     title = "今日课程"
                 )
             }
-            items(lessons?.size?:0) {
-                lessons?.get(it)?.let { lesson->
+            items(lessons?.size ?: 0) {
+                lessons?.get(it)?.let { lesson ->
                     TodoItem(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -100,7 +105,11 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
                         leftItemName = "推迟",
                         rightItemName = "点名",
                         onLeftBtnClick = {},
-                        onRightBtnClick = {}
+                        onRightBtnClick = {
+                            // 打开激活弹窗
+                            mainViewModel.todoPageDialogType.value =
+                                TodoPageDialogType.TYPE_ACTIVATE
+                        }
                     )
                 }
             }

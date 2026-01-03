@@ -27,12 +27,14 @@ import com.hx.baselibrary.base.convertSpSize
 import com.hx.wangchao.R
 import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_333333
+import com.hx.wangchao.viewModels.MainViewModel
+import com.hx.wangchao.viewModels.TodoPageDialogType
 
 /**
  * 激活对话框
  */
 @Composable
-fun ActivateDialog(modifier: Modifier) {
+fun ActivateDialog(modifier: Modifier,mainViewModel: MainViewModel) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -96,7 +98,7 @@ fun ActivateDialog(modifier: Modifier) {
 
             },
             onCancelClick = {
-
+                mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
             }
         )
 
