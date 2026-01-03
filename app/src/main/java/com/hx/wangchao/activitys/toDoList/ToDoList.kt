@@ -47,6 +47,7 @@ import com.hx.wangchao.ui.theme.c_E5E5E5
 import com.hx.wangchao.utils.ScreenUtils.px
 import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoPageDialogType
+import com.hx.wangchao.viewModels.TodoTaskStatus
 import com.hx.wangchao.viewModels.TodoViewModel
 
 /**
@@ -78,7 +79,6 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
             item {
                 MainTiele(
                     modifier = Modifier.padding(
-                        start = 40.convertSize(),
                         top = 72.convertSize(),
                         bottom = 20.convertSize()
                     ),
@@ -92,39 +92,69 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                start = 35.convertSize(),
-                                end = 35.convertSize(),
+                                start = 20.convertSize(),
+                                end = 20.convertSize(),
                                 bottom = 35.convertSize()
                             )
                             .height(348.convertSize()),
-                        title = "${lesson.courseTitle}·${lesson.leaveCount}",
+                        title = "${lesson.courseTitle}·${lesson.title}",
                         time = "今天 15:30-17:00",
                         position = "教室: ${lesson.classTitle}",
-                        isActivate = 1,
+                        isActivate = if (lesson.status== TodoTaskStatus.ACTIVE.status) 1 else 2,
                         todoIndex = 0,
-                        leftItemName = "推迟",
-                        rightItemName = "点名",
-                        onLeftBtnClick = {},
+                        //这是四个取值，plan是计划，这个状态下可以做激活active和推迟postponed操作，active状态可以做推迟和完成动作
+                        leftItemName = if (lesson.status == TodoTaskStatus.PLAN.status) "推迟" else if (lesson.status == TodoTaskStatus.ACTIVE.status) "推迟" else "",
+                        rightItemName = if (lesson.status == TodoTaskStatus.PLAN.status) "激活" else if (lesson.status == TodoTaskStatus.ACTIVE.status) "完成" else "",
+                        onLeftBtnClick = {
+                            when(lesson.status) {
+                                TodoTaskStatus.PLAN.status->{
+
+                                }
+                                TodoTaskStatus.ACTIVE.status-> {
+
+                                }
+                                else -> {}
+                            }
+                        },
                         onRightBtnClick = {
                             // 打开激活弹窗
-                            mainViewModel.todoPageDialogType.value =
-                                TodoPageDialogType.TYPE_ACTIVATE
+                            when(lesson.status) {
+                                TodoTaskStatus.PLAN.status->{
+                                    mainViewModel.todoPageDialogType.value =
+                                        TodoPageDialogType.TYPE_ACTIVATE
+                                }
+                                TodoTaskStatus.ACTIVE.status-> {
+
+                                }
+                                else -> {}
+                            }
                         }
                     )
                 }
             }
+            item {
+                MainTiele(
+                    modifier = Modifier
+                        .padding(
+                            top = 20.convertSize(),
+                            bottom = 20.convertSize()
+                        ),
+                    icon = R.drawable.todo,
+                    title = "待办任务"
+                )
+            }
+            item {
+                MainTiele(
+                    modifier = Modifier
+                        .padding(
+                            top = 20.convertSize(),
+                            bottom = 20.convertSize()
+                        ),
+                    icon = R.drawable.group,
+                    title = "客户关系"
+                )
+            }
         }
-
-        MainTiele(
-            modifier = Modifier,
-            icon = R.drawable.todo,
-            title = "待办任务"
-        )
-        MainTiele(
-            modifier = Modifier,
-            icon = R.drawable.group,
-            title = "客户关系"
-        )
         SearchView(
             modifier = Modifier.padding(start = 35.convertSize(), end = 35.convertSize()),
             "请输入学生姓名进行查询"

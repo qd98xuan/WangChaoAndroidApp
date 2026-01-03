@@ -30,16 +30,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.hx.baselibrary.base.convertSize
 import com.hx.baselibrary.base.convertSpSize
 import com.hx.wangchao.R
+import com.hx.wangchao.activitys.classTable.ClassTable
 import com.hx.wangchao.activitys.toDoList.ActivateDialog
 import com.hx.wangchao.activitys.toDoList.DelayDialog
 import com.hx.wangchao.activitys.toDoList.RollCallDialog
@@ -48,7 +51,10 @@ import com.hx.wangchao.activitys.toDoList.ToDoList
 import com.hx.wangchao.activitys.toDoList.TodoTask
 import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_666666
+import com.hx.wangchao.ui.theme.c_C1DFE1
+import com.hx.wangchao.ui.theme.c_F2F8F9
 import com.hx.wangchao.utils.main
+import com.hx.wangchao.viewModels.ClassTableViewModel
 import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoPageDialogType
 import com.hx.wangchao.viewModels.TodoViewModel
@@ -58,7 +64,11 @@ import com.hx.wangchao.viewModels.TodoViewModel
  */
 class MainActivity : BaseAppActivity() {
     val mainViewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
+    // 待办ViewModel
     val todoViewModel by lazy { ViewModelProvider(this)[TodoViewModel::class.java] }
+    // 课表ViewModel
+    val classTable by lazy { ViewModelProvider(this)[ClassTableViewModel::class.java] }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -71,18 +81,38 @@ class MainActivity : BaseAppActivity() {
             LaunchedEffect(selectIndex) {
                 title = mainViewModel.navList[selectIndex].title
             }
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize().background(brush = Brush.verticalGradient(
+                arrayListOf(
+                    c_C1DFE1,
+                    c_F2F8F9
+                )
+            ))) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    ToDoList(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, fill = true),
-                        mainViewModel,
-                        todoViewModel
-                    )
+                    when(selectIndex) {
+                        // 待办
+                        0->{
+                            ToDoList(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f, fill = true),
+                                mainViewModel,
+                                todoViewModel
+                            )
+                        }
+                        // 课表
+                        1->{
+                            ClassTable(Modifier
+                                .fillMaxWidth()
+                                .weight(1f, fill = true),
+                                mainViewModel,
+                                classTable
+                            )
+                        }
+                        2->{}
+                    }
                     val userName by remember {
                         mainViewModel.userName
                     }

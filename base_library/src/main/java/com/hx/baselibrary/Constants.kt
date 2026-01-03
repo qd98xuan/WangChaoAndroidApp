@@ -32,7 +32,7 @@ class Constants {
         const val KEY_USER_NAME = "KEY_USER_NAME"
 
         fun getUserToken() =
-            "Bearer ${MMKVUtils.getString(KEY_TOKEN) ?: ""}"
+            MMKVUtils.getString(KEY_TOKEN) ?: ""
 
         // 清除数据
         fun clearData() {

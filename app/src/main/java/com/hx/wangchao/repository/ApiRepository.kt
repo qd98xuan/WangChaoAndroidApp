@@ -4,6 +4,7 @@ import com.hx.baselibrary.Constants
 import com.hx.baselibrary.mmkv.MMKVUtils
 import com.hx.baselibrary.network.RetrofitFlowWrapper
 import com.hx.wangchao.Entity.LoginRequest
+import com.hx.wangchao.api.ClassTableApiService
 import com.hx.wangchao.api.PermissionApiService
 import com.hx.wangchao.api.TodoApiService
 import retrofit2.http.Header
@@ -19,6 +20,11 @@ object ApiRepository {
     private val todoApiService =
         retrofitFlowWrapper.create(Constants.BASE_URL, TodoApiService::class.java)
 
+    private val classTableApiService =
+        retrofitFlowWrapper.create(Constants.BASE_URL, ClassTableApiService::class.java)
+
+
+
     // 登录
     suspend fun login(
         loginRequest: LoginRequest
@@ -33,9 +39,15 @@ object ApiRepository {
     suspend fun getTodayLessons() =
         retrofitFlowWrapper.makeApiRequest(
             todoApiService.getTodayLessons(
-                MMKVUtils.getString(
-                    Constants.KEY_TOKEN
-                )?:""
+                Constants.getUserToken()
+            )
+        )
+
+    // 获取周课程安排
+    suspend fun getWeeklyLessons() =
+        retrofitFlowWrapper.makeApiRequest(
+            classTableApiService.getWeeklyLessons(
+                Constants.getUserToken()
             )
         )
 

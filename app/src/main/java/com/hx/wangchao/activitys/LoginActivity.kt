@@ -71,7 +71,7 @@ class LoginActivity : BaseAppActivity() {
             LaunchedEffect(loginSuccess) {
                 if (loginSuccess) {
                     // 登录成功，跳转主页面
-                    ToastUtils.showShort("登录成功")
+//                    ToastUtils.showShort("登录成功")
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                     finish()
                 }
