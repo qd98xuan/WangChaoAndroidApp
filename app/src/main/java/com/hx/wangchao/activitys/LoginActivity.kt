@@ -62,6 +62,12 @@ class LoginActivity : BaseAppActivity() {
             val loginSuccess by remember {
                 loginViewmodel.loginSuccess
             }
+            val loginError by remember {
+                loginViewmodel.loginError
+            }
+            LaunchedEffect(loginError) {
+                ToastUtils.showShort(loginError)
+            }
             LaunchedEffect(loginSuccess) {
                 if (loginSuccess) {
                     // 登录成功，跳转主页面

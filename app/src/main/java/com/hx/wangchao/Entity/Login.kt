@@ -7,7 +7,7 @@ data class Login(
     val accessToken: String,
     val expiresIn: Int,
     val refreshToken: String,
-    val teacherInfo: TeacherInfo
+    val userInfo: TeacherInfo
 )
 
 data class TeacherInfo(
@@ -19,4 +19,13 @@ data class TeacherInfo(
     val realname: String,
     val tenantId: String,
     val username: String
+)
+
+/**
+ * 登录上传的实体类
+ */
+data class LoginRequest(
+    val tenant: String,
+    val username: String,
+    val password: String
 )

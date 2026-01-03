@@ -19,7 +19,7 @@ class AppCrashHandler(context: Context) : Thread.UncaughtExceptionHandler {
     }
 
     override fun uncaughtException(t: Thread, e: Throwable) {
-        LogUtils.e("thread name:${t.name},throw error ${e.message}")
+        LogUtils.e("thread name:${t.name},throw error ${e.message}",e)
 //        Logger.e("thread name:${t.name},throw error ${e.message}")
         Thread(Runnable {
             Looper.prepare()

@@ -29,6 +29,8 @@ class Constants {
 
         const val KEY_USER_INFO = "KEY_USER_INFO"
 
+        const val KEY_USER_NAME = "KEY_USER_NAME"
+
         fun getUserToken() =
             "Bearer ${MMKVUtils.getString(KEY_TOKEN) ?: ""}"
 
@@ -39,12 +41,12 @@ class Constants {
 
 
         // 字体
-        val BEBAS = FontFamily(Font(R.font.bebas))
-        val BOLD = FontFamily(Font(R.font.bold))
-        val MEDIUM = FontFamily(Font(R.font.medium))
+//        val BEBAS = FontFamily(Font(R.font.bebas))
+//        val BOLD = FontFamily(Font(R.font.bold))
+//        val MEDIUM = FontFamily(Font(R.font.medium))
         val REGULAR = FontFamily(Font(R.font.regular))
-        val SCORE = FontFamily(Font(R.font.score))
-        val SEMIBOLD = FontFamily(Font(R.font.semibold))
-        val BEBAS_NEUE = FontFamily(Font(R.font.bebas_neue))
+//        val SCORE = FontFamily(Font(R.font.score))
+//        val SEMIBOLD = FontFamily(Font(R.font.semibold))
+//        val BEBAS_NEUE = FontFamily(Font(R.font.bebas_neue))
     }
 }

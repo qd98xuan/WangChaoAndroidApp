@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Card
@@ -21,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,12 +46,13 @@ import com.hx.wangchao.ui.theme.c_9BCACD
 import com.hx.wangchao.ui.theme.c_E5E5E5
 import com.hx.wangchao.utils.ScreenUtils.px
 import com.hx.wangchao.viewModels.MainViewModel
+import com.hx.wangchao.viewModels.TodoViewModel
 
 /**
  * 待办页面
  */
 @Composable
-fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel) {
+fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: TodoViewModel) {
     Column(modifier = modifier) {
         val userName by remember {
             mainViewModel.userName
@@ -60,25 +63,49 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel) {
         StatusBar(modifier = Modifier, title, userName) {
 
         }
-        MainTiele(
-            modifier = Modifier.padding(start = 40.convertSize(), top = 72.convertSize()),
-            icon = R.drawable.book_mark,
-            title = "今日课程"
-        )
-        TodoItem(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(348.convertSize()),
-            title = "初三物理专题班·第 5 课时",
-            time = "今天 15:30-17:00",
-            position = "教室: 一楼 103",
-            isActivate = 1,
-            todoIndex = 0,
-            leftItemName = "推迟",
-            rightItemName = "点名",
-            onLeftBtnClick = {},
-            onRightBtnClick = {}
-        )
+        // 获取今日课程
+        LaunchedEffect(true) {
+            todoViewModel.getTodayLessons()
+        }
+
+        // 当天的课程安排
+        val lessons by remember {
+            todoViewModel.lessons
+        }
+
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            item {
+                MainTiele(
+                    modifier = Modifier.padding(start = 40.convertSize(), top = 72.convertSize()),
+                    icon = R.drawable.book_mark,
+                    title = "今日课程"
+                )
+            }
+            items(lessons?.size?:0) {
+                lessons?.get(it)?.let { lesson->
+                    TodoItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 35.convertSize(),
+                                end = 35.convertSize(),
+                                bottom = 35.convertSize()
+                            )
+                            .height(348.convertSize()),
+                        title = "${lesson.courseTitle}·${lesson.leaveCount}",
+                        time = "今天 15:30-17:00",
+                        position = "教室: ${lesson.classTitle}",
+                        isActivate = 1,
+                        todoIndex = 0,
+                        leftItemName = "推迟",
+                        rightItemName = "点名",
+                        onLeftBtnClick = {},
+                        onRightBtnClick = {}
+                    )
+                }
+            }
+        }
+
         MainTiele(
             modifier = Modifier,
             icon = R.drawable.todo,

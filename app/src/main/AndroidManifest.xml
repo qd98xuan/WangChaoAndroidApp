@@ -26,6 +26,13 @@
             android:name="ScopedStorage"
             android:value="true" />
         <activity android:name=".activitys.MainActivity" android:exported="true">
+
+        </activity>
+        <activity
+            android:name=".activitys.SplashActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.NewStationEquipment">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,13 +40,6 @@
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".activitys.SplashActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.NewStationEquipment">
-
         </activity>
 
         <activity android:name=".activitys.BaseAppActivity" android:exported="false" />

@@ -50,12 +50,14 @@ import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_666666
 import com.hx.wangchao.utils.main
 import com.hx.wangchao.viewModels.MainViewModel
+import com.hx.wangchao.viewModels.TodoViewModel
 
 /**
  * 主页面
  */
 class MainActivity : BaseAppActivity() {
     val mainViewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
+    val todoViewModel by lazy { ViewModelProvider(this)[TodoViewModel::class.java] }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -73,22 +75,23 @@ class MainActivity : BaseAppActivity() {
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-//                    ToDoList(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .weight(1f, fill = true),
-//                        mainViewModel
-//                    )
+                    ToDoList(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f, fill = true),
+                        mainViewModel,
+                        todoViewModel
+                    )
                     val userName by remember {
                         mainViewModel.userName
                     }
                     val todoTaskList = remember {
                         mainViewModel.todoTaskList
                     }
-                    TodoTask(modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f, fill = true),
-                        userName = userName,todoTaskList)
+//                    TodoTask(modifier = Modifier
+//                        .fillMaxWidth()
+//                        .weight(1f, fill = true),
+//                        userName = userName,todoTaskList)
 
                     Navigation(
                         modifier = Modifier

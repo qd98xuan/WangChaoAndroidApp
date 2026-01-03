@@ -3,6 +3,8 @@ package com.hx.wangchao.viewModels
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.hx.baselibrary.Constants
+import com.hx.baselibrary.mmkv.MMKVUtils
 import com.hx.wangchao.R
 
 /**
@@ -26,7 +28,7 @@ class MainViewModel: ViewModel() {
     // 当前页面选择的名称
     var title = mutableStateOf("")
     // 当前页面用户名
-    var userName = mutableStateOf("XXX")
+    var userName = mutableStateOf(MMKVUtils.getString(Constants.KEY_USER_NAME)?:"")
 
 }
 // 戴航栏目的item

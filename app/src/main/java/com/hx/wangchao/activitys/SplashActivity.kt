@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -18,21 +20,39 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.blankj.utilcode.util.ToastUtils
 import com.hx.baselibrary.base.convertSize
 import com.hx.wangchao.R
+import com.hx.wangchao.viewModels.SplashViewModel
+import com.hx.wangchao.viewModels.TodoViewModel
 import kotlinx.coroutines.delay
 
 /**
  * 启动页
  */
 class SplashActivity : BaseAppActivity() {
+    val splashViewModel by lazy {
+        ViewModelProvider(this).get(SplashViewModel::class.java)
+    }
+    val todoViewMode by lazy {
+        ViewModelProvider(this).get(TodoViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             LaunchedEffect(true) {
-                delay(3000)
-//                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                todoViewMode.getTodayLessons()
+            }
+            val lessonState by todoViewMode.lessonState.collectAsState()
+            if (lessonState?.code == 200) {
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            } else if (lessonState?.code == 401) {
                 startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+            } else {
+                ToastUtils.showShort(lessonState?.message)
             }
             Box(
                 modifier = Modifier

@@ -28,7 +28,7 @@ class RetrofitFlowWrapper private constructor() {
         .addInterceptor(ResponseCodeInterceptor())
         .build()
 
-    private fun retrofit(baseUrl:String): Retrofit = Retrofit.Builder()
+    private fun retrofit(baseUrl: String): Retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(FlowCallAdapterFactory.create())
@@ -48,38 +48,34 @@ class RetrofitFlowWrapper private constructor() {
         }
     }
 
-    fun <T> create(baseUrl:String,service: Class<T>): T {
+    fun <T> create(baseUrl: String, service: Class<T>): T {
         return retrofit(baseUrl).create(service)
     }
 
-    suspend fun <T> makeApiRequest(flow: Flow<Response<BaseResponse<T>>>) = flow {
+    suspend fun <T> makeApiRequest(flow: Flow<Response<T>>) = flow {
         emit(Result.Loading)
         try {
             val response = flow.first()
             if (response.isSuccessful) {
                 val body = response.body()
-                if (body?.code == 10000) {
-                    emit(Result.Success(body.data))
-                } else {
-                    emit(Result.Error(body?.message ?: ""))
-                }
+                emit(Result.Success(body))
             } else {
-                emit(Result.Error(response.message()))
+                emit(Result.Error(response.code(), response?.errorBody()?.byteStream()?.toString()?:""))
             }
         } catch (e: Exception) {
-            emit(Result.Error(e.toString()))
+            emit(Result.Error(10000, e.toString()))
         }
     }
 }
 
 data class BaseResponse<T>(
     val code: Int,
-    val data: T,
+    val data: T?,
     val message: String
 )
 
 sealed class Result<out T> {
     object Loading : Result<Nothing>()
     data class Success<T>(val data: T) : Result<T>()
-    data class Error(val msg: String) : Result<Nothing>()
+    data class Error(val code: Int, val msg: String) : Result<Nothing>()
 }
