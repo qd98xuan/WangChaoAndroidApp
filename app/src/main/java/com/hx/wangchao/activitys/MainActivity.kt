@@ -171,11 +171,15 @@ class MainActivity : BaseAppActivity() {
                     }
 
                     TodoPageDialogType.TYPE_DELAY -> {
-                        DelayDialog(modifier = Modifier.align(Alignment.BottomCenter))
+                        DelayDialog(
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                            todoViewModel,
+                            mainViewModel
+                        )
                     }
 
                     TodoPageDialogType.TYPE_ROLLCALL -> {
-                        RollCallDialog(modifier = Modifier)
+                        RollCallDialog(modifier = Modifier,mainViewModel,todoViewModel)
                     }
 
                     else -> {}

@@ -104,13 +104,18 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
                         todoIndex = 0,
                         //这是四个取值，plan是计划，这个状态下可以做激活active和推迟postponed操作，active状态可以做推迟和完成动作
                         leftItemName = if (lesson.status == TodoTaskStatus.PLAN.status) "推迟" else if (lesson.status == TodoTaskStatus.ACTIVE.status) "推迟" else "",
-                        rightItemName = if (lesson.status == TodoTaskStatus.PLAN.status) "激活" else if (lesson.status == TodoTaskStatus.ACTIVE.status) "完成" else "",
+                        rightItemName = if (lesson.status == TodoTaskStatus.PLAN.status) "激活" else if (lesson.status == TodoTaskStatus.ACTIVE.status) "点名" else "",
                         onLeftBtnClick = {
                             when(lesson.status) {
                                 TodoTaskStatus.PLAN.status->{
-
+                                    todoViewModel.activeLessonId = lesson.id
+                                    mainViewModel.todoPageDialogType.value =
+                                        TodoPageDialogType.TYPE_DELAY
                                 }
                                 TodoTaskStatus.ACTIVE.status-> {
+                                    todoViewModel.activeLessonId = lesson.id
+                                    mainViewModel.todoPageDialogType.value =
+                                        TodoPageDialogType.TYPE_DELAY
                                 }
                                 else -> {}
                             }
@@ -124,7 +129,11 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
                                         TodoPageDialogType.TYPE_ACTIVATE
                                 }
                                 TodoTaskStatus.ACTIVE.status-> {
-
+                                    // 点名
+                                    todoViewModel.activeLessonId = lesson.id
+                                    mainViewModel.todoPageDialogType.value =
+                                        TodoPageDialogType.TYPE_ROLLCALL
+                                    todoViewModel.getAttendanceList()
                                 }
                                 else -> {}
                             }

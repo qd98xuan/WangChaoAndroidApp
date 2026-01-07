@@ -74,4 +74,98 @@ class TodoViewModel : ViewModel() {
             }
         }
     }
+
+    // 推迟课程
+    private val _postponeLessonState = MutableStateFlow<BaseResponse<String>?>(null)
+    val postponeLessonState: StateFlow<BaseResponse<String>?> = _postponeLessonState
+    fun postponeLesson(memo: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            ApiRepository.postponeLesson(
+                mapOf(
+                    Pair("lessonId",activeLessonId),
+                    Pair("memo", memo)
+                )
+            ).collect {
+                val response = when (it) {
+                    is Result.Success<*> -> {
+                        BaseResponse(200, "推迟课程成功", "推迟课程成功")
+                    }
+
+                    is Result.Loading -> BaseResponse(-1, null, "加载中")
+                    is Result.Error -> BaseResponse(it.code, null, it.msg)
+                }
+                _postponeLessonState.value = response as BaseResponse<String>?
+            }
+        }
+    }
+
+    // 状态完成
+    private val _completeLessonState = MutableStateFlow<BaseResponse<String>?>(null)
+    val completeLessonState: StateFlow<BaseResponse<String>?> = _completeLessonState
+    fun completeLesson() {
+        viewModelScope.launch(Dispatchers.IO) {
+            ApiRepository.completeLesson(
+                mapOf(
+                    Pair("lessonId",activeLessonId)
+                )
+            ).collect {
+                val response = when (it) {
+                    is Result.Success<*> -> {
+                        BaseResponse(200, "完成课程成功", "完成课程成功")
+                    }
+
+                    is Result.Loading -> BaseResponse(-1, null, "加载中")
+                    is Result.Error -> BaseResponse(it.code, null, it.msg)
+                }
+                _completeLessonState.value = response as BaseResponse<String>?
+            }
+        }
+    }
+
+    // 出勤点名列表
+    private val _attendanceListState = MutableStateFlow<BaseResponse<List<String>>?>(null)
+    val attendanceListState: StateFlow<BaseResponse<List<String>>?> = _attendanceListState
+    fun getAttendanceList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            ApiRepository.getAttendanceList(
+                mapOf(
+                    Pair("lessonId",activeLessonId)
+                )
+            ).collect {
+                val response = when (it) {
+                    is Result.Success<*> -> {
+                        BaseResponse(200, it.data as List<String>?, "获取出勤点名列表成功")
+                    }
+
+                    is Result.Loading -> BaseResponse(-1, null, "加载中")
+                    is Result.Error -> BaseResponse(it.code, null, it.msg)
+                }
+                _attendanceListState.value = response as BaseResponse<List<String>>?
+            }
+        }
+    }
+
+    // 出勤点名
+    private val _attendanceState = MutableStateFlow<BaseResponse<String>?>(null)
+    val attendanceState: StateFlow<BaseResponse<String>?> = _attendanceState
+    fun attendance(attendanceList: List<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            ApiRepository.callAttendance(
+                mapOf(
+                    Pair("lessonId",activeLessonId),
+                    Pair("attendanceList",attendanceList.joinToString(","))
+                )
+            ).collect {
+                val response = when (it) {
+                    is Result.Success<*> -> {
+                        BaseResponse(200, "出勤点名成功", "出勤点名成功")
+                    }
+
+                    is Result.Loading -> BaseResponse(-1, null, "加载中")
+                    is Result.Error -> BaseResponse(it.code, null, it.msg)
+                }
+                _attendanceState.value = response as BaseResponse<String>?
+            }
+        }
+    }
 }

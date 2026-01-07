@@ -16,6 +16,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -128,23 +129,24 @@ fun ActivateDialog(modifier: Modifier, mainViewModel: MainViewModel,baseDataView
         )
         val activateLessonState by todoViewModel.activateLessonState.collectAsState()
         // 检测是否激活课程成功
-        when(activateLessonState?.code) {
-            200->{
-                ToastUtils.showShort("激活课程成功")
-                mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
-                // 重新获取今日课程安排
-                todoViewModel.getTodayLessons()
-                // 刷新一下数据
-                activeTeacher=DropdownEntity("","")
-                activeSpace = DropdownEntity("","")
-                todoViewModel.activeLessonId = ""
-            }
-            -1->{}
-            else->{
-                ToastUtils.showShort(activateLessonState?.message?:"")
+        LaunchedEffect(activateLessonState) {
+            when(activateLessonState?.code) {
+                200->{
+                    ToastUtils.showShort("激活课程成功")
+                    mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
+                    // 重新获取今日课程安排
+                    todoViewModel.getTodayLessons()
+                    // 刷新一下数据
+                    activeTeacher=DropdownEntity("","")
+                    activeSpace = DropdownEntity("","")
+                    todoViewModel.activeLessonId = ""
+                }
+                -1->{}
+                else->{
+                    ToastUtils.showShort(activateLessonState?.message?:"")
+                }
             }
         }
-
     }
 }
 

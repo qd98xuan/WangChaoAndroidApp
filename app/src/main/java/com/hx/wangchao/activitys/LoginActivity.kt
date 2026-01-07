@@ -24,6 +24,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,12 +63,14 @@ class LoginActivity : BaseAppActivity() {
             val loginSuccess by remember {
                 loginViewmodel.loginSuccess
             }
-            val loginError by remember {
-                loginViewmodel.loginError
+            val loginError by loginViewmodel.loginError.collectAsState()
+
+            if (loginError?.code!=200) {
+                if (loginError?.message?.isNullOrBlank() == false) {
+                    ToastUtils.showShort(loginError?.message?:"")
+                }
             }
-            LaunchedEffect(loginError) {
-                ToastUtils.showShort(loginError)
-            }
+
             LaunchedEffect(loginSuccess) {
                 if (loginSuccess) {
                     // 登录成功，跳转主页面

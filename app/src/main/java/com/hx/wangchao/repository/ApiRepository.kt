@@ -30,7 +30,6 @@ object ApiRepository {
         retrofitFlowWrapper.create(Constants.BASE_URL, BaseApiService::class.java)
 
 
-
     // 登录
     suspend fun login(
         loginRequest: LoginRequest
@@ -83,7 +82,45 @@ object ApiRepository {
         )
     )
 
+    // 推迟课程
+    suspend fun postponeLesson(
+        params: Map<String, String>
+    ) = retrofitFlowWrapper.makeApiRequest(
+        todoApiService.postponeLesson(
+            Constants.getUserToken(),
+            params
+        )
+    )
 
+    // 状态完成
+    suspend fun completeLesson(
+        params: Map<String, String>
+    ) = retrofitFlowWrapper.makeApiRequest(
+        todoApiService.completeLesson(
+            Constants.getUserToken(),
+            params
+        )
+    )
+
+    // 出勤点名列表
+    suspend fun getAttendanceList(
+        params: Map<String, String>
+    ) = retrofitFlowWrapper.makeApiRequest(
+        todoApiService.getAttendanceList(
+            Constants.getUserToken(),
+            params
+        )
+    )
+
+    // 出勤点名
+    suspend fun callAttendance(
+        params: Map<String, String>
+    ) = retrofitFlowWrapper.makeApiRequest(
+        todoApiService.callAttendance(
+            Constants.getUserToken(),
+            params
+        )
+    )
 
 
 }

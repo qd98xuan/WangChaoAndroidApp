@@ -47,14 +47,16 @@ class SplashActivity : BaseAppActivity() {
                 todoViewMode.getTodayLessons()
             }
             val lessonState by todoViewMode.lessonState.collectAsState()
-            if (lessonState?.code == 200) {
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                finish()
-            } else if (lessonState?.code == 401) {
-                startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
-                finish()
-            } else {
-                ToastUtils.showShort(lessonState?.message)
+            LaunchedEffect(lessonState) {
+                if (lessonState?.code == 200) {
+                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    finish()
+                } else if (lessonState?.code == 401) {
+                    startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+                    finish()
+                } else {
+                    ToastUtils.showShort(lessonState?.message)
+                }
             }
             Box(
                 modifier = Modifier

@@ -32,13 +32,16 @@ import com.hx.baselibrary.base.convertSpSize
 import com.hx.wangchao.R
 import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_333333
+import com.hx.wangchao.viewModels.MainViewModel
+import com.hx.wangchao.viewModels.TodoPageDialogType
+import com.hx.wangchao.viewModels.TodoViewModel
 
 
 /**
  * 点名对话框
  */
 @Composable
-fun RollCallDialog(modifier: Modifier) {
+fun RollCallDialog(modifier: Modifier,mainViewModel: MainViewModel,todoViewModel: TodoViewModel) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -96,7 +99,7 @@ fun RollCallDialog(modifier: Modifier) {
 
             },
             onCancelClick = {
-
+                mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
             }
         )
 

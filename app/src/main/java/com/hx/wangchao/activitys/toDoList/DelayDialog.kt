@@ -27,12 +27,15 @@ import com.hx.baselibrary.base.convertSpSize
 import com.hx.wangchao.R
 import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_333333
+import com.hx.wangchao.viewModels.MainViewModel
+import com.hx.wangchao.viewModels.TodoPageDialogType
+import com.hx.wangchao.viewModels.TodoViewModel
 
 /**
  * 推迟对话框
  */
 @Composable
-fun DelayDialog(modifier: Modifier) {
+fun DelayDialog(modifier: Modifier,todoViewModel: TodoViewModel,mainViewModel: MainViewModel) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -105,10 +108,10 @@ fun DelayDialog(modifier: Modifier) {
             "确认推迟",
             "取消",
             onConfirmClick = {
-
+                todoViewModel.postponeLesson(delayReason)
             },
             onCancelClick = {
-
+                mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
             }
         )
 
