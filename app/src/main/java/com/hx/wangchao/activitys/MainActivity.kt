@@ -23,6 +23,7 @@ import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.blankj.utilcode.util.ToastUtils
 import com.hx.baselibrary.base.convertSize
 import com.hx.baselibrary.base.convertSpSize
 import com.hx.wangchao.R
@@ -54,6 +56,7 @@ import com.hx.wangchao.ui.theme.c_666666
 import com.hx.wangchao.ui.theme.c_C1DFE1
 import com.hx.wangchao.ui.theme.c_F2F8F9
 import com.hx.wangchao.utils.main
+import com.hx.wangchao.viewModels.BaseDataViewModel
 import com.hx.wangchao.viewModels.ClassTableViewModel
 import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoPageDialogType
@@ -64,13 +67,22 @@ import com.hx.wangchao.viewModels.TodoViewModel
  */
 class MainActivity : BaseAppActivity() {
     val mainViewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
+
     // 待办ViewModel
     val todoViewModel by lazy { ViewModelProvider(this)[TodoViewModel::class.java] }
+
     // 课表ViewModel
     val classTable by lazy { ViewModelProvider(this)[ClassTableViewModel::class.java] }
 
+    // 基础数据ViewModel
+    val baseDataViewModel by lazy { ViewModelProvider(this)[BaseDataViewModel::class.java] }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 获取老师列表
+        baseDataViewModel.getTeacherList()
+        // 获取场地列表
+        baseDataViewModel.getSpaceList()
         setContent {
             var selectIndex by remember {
                 mainViewModel.selectIndex
@@ -78,22 +90,32 @@ class MainActivity : BaseAppActivity() {
             var title by remember {
                 mainViewModel.title
             }
+            val baseDatatStatus by baseDataViewModel.baseDatatStatus.collectAsState()
+            if (baseDatatStatus?.code != -1) {
+                ToastUtils.showShort(baseDatatStatus?.message)
+            }
             LaunchedEffect(selectIndex) {
                 title = mainViewModel.navList[selectIndex].title
             }
-            Box(modifier = Modifier.fillMaxSize().background(brush = Brush.verticalGradient(
-                arrayListOf(
-                    c_C1DFE1,
-                    c_F2F8F9
-                )
-            ))) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            arrayListOf(
+                                c_C1DFE1,
+                                c_F2F8F9
+                            )
+                        )
+                    )
+            ) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    when(selectIndex) {
+                    when (selectIndex) {
                         // 待办
-                        0->{
+                        0 -> {
                             ToDoList(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -103,15 +125,17 @@ class MainActivity : BaseAppActivity() {
                             )
                         }
                         // 课表
-                        1->{
-                            ClassTable(Modifier
-                                .fillMaxWidth()
-                                .weight(1f, fill = true),
+                        1 -> {
+                            ClassTable(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f, fill = true),
                                 mainViewModel,
                                 classTable
                             )
                         }
-                        2->{}
+
+                        2 -> {}
                     }
                     val userName by remember {
                         mainViewModel.userName
@@ -136,13 +160,20 @@ class MainActivity : BaseAppActivity() {
                 val todoPageDialogType by remember {
                     mainViewModel.todoPageDialogType
                 }
-                when(todoPageDialogType) {
+                when (todoPageDialogType) {
                     TodoPageDialogType.TYPE_ACTIVATE -> {
-                        ActivateDialog(modifier = Modifier.align(Alignment.BottomCenter),mainViewModel)
+                        ActivateDialog(
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                            mainViewModel,
+                            baseDataViewModel,
+                            todoViewModel
+                        )
                     }
+
                     TodoPageDialogType.TYPE_DELAY -> {
                         DelayDialog(modifier = Modifier.align(Alignment.BottomCenter))
                     }
+
                     TodoPageDialogType.TYPE_ROLLCALL -> {
                         RollCallDialog(modifier = Modifier)
                     }

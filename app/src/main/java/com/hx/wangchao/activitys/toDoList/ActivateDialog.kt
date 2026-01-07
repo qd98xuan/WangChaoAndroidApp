@@ -12,8 +12,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -22,19 +30,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.em
+import com.blankj.utilcode.util.ToastUtils
 import com.hx.baselibrary.base.convertSize
 import com.hx.baselibrary.base.convertSpSize
+import com.hx.wangchao.Entity.DropdownEntity
 import com.hx.wangchao.R
 import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_333333
+import com.hx.wangchao.viewModels.BaseDataViewModel
 import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoPageDialogType
+import com.hx.wangchao.viewModels.TodoViewModel
 
 /**
  * 激活对话框
  */
 @Composable
-fun ActivateDialog(modifier: Modifier,mainViewModel: MainViewModel) {
+fun ActivateDialog(modifier: Modifier, mainViewModel: MainViewModel,baseDataViewModel: BaseDataViewModel,todoViewModel: TodoViewModel) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -57,13 +69,20 @@ fun ActivateDialog(modifier: Modifier,mainViewModel: MainViewModel) {
             color = c_047B83,
             modifier = Modifier.padding(top = 31.convertSize(), start = 75.convertSize()),
         )
+        val teachers = remember {
+            baseDataViewModel.teachers
+        }
+        var activeTeacher by remember {
+            todoViewModel.activeTeacher
+        }
         SelectView(
             modifier = Modifier
                 .padding(top = 17.convertSize(), start = 69.convertSize(), end = 69.convertSize())
                 .fillMaxWidth(),
-            text = "张雪峰",
-            onClick = {
-
+            text = activeTeacher.value,
+            teachers,
+            onSelect = {
+                activeTeacher = it
             }
         )
 
@@ -73,14 +92,20 @@ fun ActivateDialog(modifier: Modifier,mainViewModel: MainViewModel) {
             color = c_047B83,
             modifier = Modifier.padding(top = 40.convertSize(), start = 75.convertSize()),
         )
-
+        val spaces = remember {
+            baseDataViewModel.spaces
+        }
+        var activeSpace by remember {
+            todoViewModel.activeSpace
+        }
         SelectView(
             modifier = Modifier
                 .padding(top = 17.convertSize(), start = 69.convertSize(), end = 69.convertSize())
                 .fillMaxWidth(),
-            text = "一楼 103",
-            onClick = {
-
+            text = activeSpace.value,
+            spaces,
+            onSelect = {
+                activeSpace = it
             }
         )
 
@@ -95,19 +120,45 @@ fun ActivateDialog(modifier: Modifier,mainViewModel: MainViewModel) {
             "确认激活",
             "取消",
             onConfirmClick = {
-
+                todoViewModel.activateLesson()
             },
             onCancelClick = {
                 mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
             }
         )
+        val activateLessonState by todoViewModel.activateLessonState.collectAsState()
+        // 检测是否激活课程成功
+        when(activateLessonState?.code) {
+            200->{
+                ToastUtils.showShort("激活课程成功")
+                mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
+                // 重新获取今日课程安排
+                todoViewModel.getTodayLessons()
+                // 刷新一下数据
+                activeTeacher=DropdownEntity("","")
+                activeSpace = DropdownEntity("","")
+                todoViewModel.activeLessonId = ""
+            }
+            -1->{}
+            else->{
+                ToastUtils.showShort(activateLessonState?.message?:"")
+            }
+        }
 
     }
 }
 
 // 可选择的选择框
 @Composable
-fun SelectView(modifier: Modifier, text: String, onClick: () -> Unit) {
+fun SelectView(
+    modifier: Modifier,
+    text: String,
+    list: SnapshotStateList<DropdownEntity>,
+    onSelect: (item: DropdownEntity) -> Unit
+) {
+    var expanded by remember {
+        mutableStateOf(false)
+    }
     Box(
         modifier = modifier
             .height(135.convertSize())
@@ -115,6 +166,9 @@ fun SelectView(modifier: Modifier, text: String, onClick: () -> Unit) {
                 painterResource(R.drawable.select_item_bg),
                 contentScale = ContentScale.FillBounds
             )
+            .clickable {
+                expanded = true
+            }
     ) {
         Text(
             text = text,
@@ -124,6 +178,30 @@ fun SelectView(modifier: Modifier, text: String, onClick: () -> Unit) {
                 .align(Alignment.CenterStart)
                 .padding(start = 40.convertSize()),
         )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            list.forEach { option ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = option.value,
+                            fontSize = 40.convertSpSize(),
+                            color = c_333333,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(135.convertSize())
+                        )
+                    },
+                    onClick = {
+                        onSelect(option)
+                        expanded = false
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -157,7 +235,7 @@ fun ConfirmCancelView(
                 color = c_047B83,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.Center)
-                )
+            )
         }
 
         Box(

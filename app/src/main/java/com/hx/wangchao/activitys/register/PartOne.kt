@@ -147,15 +147,16 @@ fun PartOne(modifier: Modifier, onNextClick: () -> Unit) {
                 end = 35.convertSize()
             )
         )
-        SelectView(
-            modifier = Modifier
-                .padding(top = 17.convertSize(), start = 35.convertSize(), end = 35.convertSize())
-                .fillMaxWidth(),
-            text = "张雪峰",
-            onClick = {
-
-            }
-        )
+//        SelectView(
+//            modifier = Modifier
+//                .padding(top = 17.convertSize(), start = 35.convertSize(), end = 35.convertSize())
+//                .fillMaxWidth(),
+//            text = "张雪峰",
+//            list = arrayListOf(),
+//            onSelect = {
+//
+//            }
+//        )
         Text(
             "机构图片",
             fontSize = 40.convertSpSize(),

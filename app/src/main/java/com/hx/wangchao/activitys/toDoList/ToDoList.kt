@@ -111,7 +111,6 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
 
                                 }
                                 TodoTaskStatus.ACTIVE.status-> {
-
                                 }
                                 else -> {}
                             }
@@ -120,6 +119,7 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
                             // 打开激活弹窗
                             when(lesson.status) {
                                 TodoTaskStatus.PLAN.status->{
+                                    todoViewModel.activeLessonId = lesson.id
                                     mainViewModel.todoPageDialogType.value =
                                         TodoPageDialogType.TYPE_ACTIVATE
                                 }

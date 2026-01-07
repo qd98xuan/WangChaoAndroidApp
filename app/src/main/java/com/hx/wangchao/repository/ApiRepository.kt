@@ -3,11 +3,14 @@ package com.hx.wangchao.repository
 import com.hx.baselibrary.Constants
 import com.hx.baselibrary.mmkv.MMKVUtils
 import com.hx.baselibrary.network.RetrofitFlowWrapper
+import com.hx.wangchao.Entity.ActiveRequestParam
 import com.hx.wangchao.Entity.LoginRequest
+import com.hx.wangchao.api.BaseApiService
 import com.hx.wangchao.api.ClassTableApiService
 import com.hx.wangchao.api.PermissionApiService
 import com.hx.wangchao.api.TodoApiService
 import retrofit2.http.Header
+import retrofit2.http.PUT
 
 /**
  * api的仓库
@@ -22,6 +25,9 @@ object ApiRepository {
 
     private val classTableApiService =
         retrofitFlowWrapper.create(Constants.BASE_URL, ClassTableApiService::class.java)
+
+    private val baseApiService =
+        retrofitFlowWrapper.create(Constants.BASE_URL, BaseApiService::class.java)
 
 
 
@@ -50,6 +56,34 @@ object ApiRepository {
                 Constants.getUserToken()
             )
         )
+
+    // 获取教师列表
+    suspend fun getTeacherList() =
+        retrofitFlowWrapper.makeApiRequest(
+            baseApiService.getTeacherList(
+                Constants.getUserToken()
+            )
+        )
+
+    // 获取场地列表
+    suspend fun getSpaceList() =
+        retrofitFlowWrapper.makeApiRequest(
+            baseApiService.getSpaceList(
+                Constants.getUserToken()
+            )
+        )
+
+    // 激活课程
+    suspend fun activateLesson(
+        param: ActiveRequestParam
+    ) = retrofitFlowWrapper.makeApiRequest(
+        todoApiService.activateLesson(
+            Constants.getUserToken(),
+            param
+        )
+    )
+
+
 
 
 }
