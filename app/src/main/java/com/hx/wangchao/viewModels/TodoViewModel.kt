@@ -12,6 +12,7 @@ import com.hx.wangchao.Entity.AttendanceList
 import com.hx.wangchao.Entity.AttendanceSubmitEntity
 import com.hx.wangchao.Entity.DropdownEntity
 import com.hx.wangchao.Entity.TodoListEntity
+import com.hx.wangchao.activitys.toDoList.RollCall
 import com.hx.wangchao.activitys.toDoList.RollCallEntity
 import com.hx.wangchao.repository.ApiRepository
 import kotlinx.coroutines.Dispatchers
@@ -144,7 +145,14 @@ class TodoViewModel : ViewModel() {
                 val response = when (it) {
                     is Result.Success<*> -> {
                         (it.data as AttendanceList).forEach { student ->
-                            rollCallList.add(RollCallEntity(name = student.accountRealName, accountId = student.accountId))
+                            rollCallList.add(RollCallEntity(name = student.accountRealName, accountId = student.accountId, isSelectedRollCall = when(student.status) {
+                                "NORMAL" -> RollCall.CHUQIN
+                                "LEAVE" -> RollCall.CHIDAO
+                                "MAKEUP" -> RollCall.BUKE
+                                "ABSENCE" -> RollCall.QUEQIN
+                                "" -> RollCall.QINGJIA
+                                else -> RollCall.CHUQIN
+                            }))
                         }
                         BaseResponse(200, it.data, "获取出勤点名列表成功")
                     }
@@ -160,7 +168,7 @@ class TodoViewModel : ViewModel() {
     // 出勤点名
     private val _attendanceState = MutableStateFlow<BaseResponse<String>?>(null)
     val attendanceState: StateFlow<BaseResponse<String>?> = _attendanceState
-    fun attendance(data:ArrayList<AttendanceSubmitEntity>) {
+    fun attendance(data:AttendanceSubmitEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             ApiRepository.callAttendance(
                 data

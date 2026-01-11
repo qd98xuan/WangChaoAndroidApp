@@ -56,6 +56,6 @@ interface TodoApiService {
     @PUT("/lesson/attendance/call")
     fun callAttendance(
         @Header("Authorization") authorization: String,
-        @Body data: ArrayList<AttendanceSubmitEntity>
+        @Body data: AttendanceSubmitEntity
     ): Flow<Response<Unit>>
 }

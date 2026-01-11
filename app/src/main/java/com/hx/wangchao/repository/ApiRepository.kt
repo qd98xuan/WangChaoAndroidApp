@@ -115,7 +115,7 @@ object ApiRepository {
 
     // 出勤点名
     suspend fun callAttendance(
-       data: ArrayList<AttendanceSubmitEntity>
+       data: AttendanceSubmitEntity
     ) = retrofitFlowWrapper.makeApiRequest(
         todoApiService.callAttendance(
             Constants.getUserToken(),

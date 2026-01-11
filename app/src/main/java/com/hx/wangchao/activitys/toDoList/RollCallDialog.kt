@@ -32,6 +32,7 @@ import androidx.compose.ui.text.TextStyle
 import com.blankj.utilcode.util.ToastUtils
 import com.hx.baselibrary.base.convertSize
 import com.hx.baselibrary.base.convertSpSize
+import com.hx.wangchao.Entity.AttendanceSubmitEntity
 import com.hx.wangchao.R
 import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_333333
@@ -66,6 +67,7 @@ fun RollCallDialog(modifier: Modifier,mainViewModel: MainViewModel,todoViewModel
                 .fillMaxWidth()
                 .weight(1f)
         ) {
+            // 监听点名列表结果
             val attendanceListState by todoViewModel.attendanceListState.collectAsState()
             val testDataList = remember {
                 todoViewModel.rollCallList
@@ -77,6 +79,11 @@ fun RollCallDialog(modifier: Modifier,mainViewModel: MainViewModel,todoViewModel
                     }
                 }
             }
+            // 监听提交点名结果
+            val attendanceState by todoViewModel.attendanceState.collectAsState()
+            LaunchedEffect(attendanceState) {
+                ToastUtils.showShort(attendanceState?.message)
+            }
 
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(testDataList.size) {
@@ -86,37 +93,28 @@ fun RollCallDialog(modifier: Modifier,mainViewModel: MainViewModel,todoViewModel
                             end = 69.convertSize()
                         ),
                         testDataList.get(it)
-                    )
+                    ) {
+                        todoViewModel.attendance(
+                            AttendanceSubmitEntity(todoViewModel.activeLessonId,it.accountId,
+                                when(it.isSelectedRollCall) {
+                                    RollCall.CHUQIN -> "NORMAL"
+                                    RollCall.CHIDAO -> "LEAVE"
+                                    RollCall.BUKE -> "MAKEUP"
+                                    RollCall.QUEQIN -> "ABSENCE"
+                                    RollCall.QINGJIA -> ""
+                                    else -> {""}
+                                })
+                        )
+                    }
                 }
             }
         }
-
-        ConfirmCancelView(
-            modifier = Modifier
-                .padding(
-                    start = 63.convertSize(),
-                    end = 63.convertSize(),
-                    top = 69.convertSize(),
-                    bottom = 26.convertSize()
-                ),
-            "确认提交",
-            "取消",
-            onConfirmClick = {
-                todoViewModel.attendance(
-
-                )
-            },
-            onCancelClick = {
-                mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
-            }
-        )
-
     }
 }
 
 
 @Composable
-fun RollcallItem(modifier: Modifier, rollCallEntity: RollCallEntity) {
+fun RollcallItem(modifier: Modifier, rollCallEntity: RollCallEntity,onValueChange:(data:RollCallEntity)->Unit) {
     var isSelectedRollCall by remember {
         mutableStateOf(rollCallEntity.isSelectedRollCall)
     }
@@ -145,6 +143,7 @@ fun RollcallItem(modifier: Modifier, rollCallEntity: RollCallEntity) {
                         .clickable {
                             isSelectedRollCall = item.rollCall
                             rollCallEntity.isSelectedRollCall = isSelectedRollCall
+                            onValueChange(rollCallEntity)
                         }
                 )
             }
