@@ -51,7 +51,7 @@ class SplashActivity : BaseAppActivity() {
                 if (lessonState?.code == 200) {
                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                     finish()
-                } else if (lessonState?.code == 401) {
+                } else if (lessonState?.code == 500) {
                     startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
                     finish()
                 } else {

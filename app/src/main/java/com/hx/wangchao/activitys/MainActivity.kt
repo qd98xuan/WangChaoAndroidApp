@@ -1,8 +1,10 @@
 package com.hx.wangchao.activitys
 
 import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -77,6 +79,7 @@ class MainActivity : BaseAppActivity() {
     // 基础数据ViewModel
     val baseDataViewModel by lazy { ViewModelProvider(this)[BaseDataViewModel::class.java] }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 获取老师列表
@@ -123,6 +126,10 @@ class MainActivity : BaseAppActivity() {
                                 mainViewModel,
                                 todoViewModel
                             )
+                            // 获取老师列表
+                            baseDataViewModel.getTeacherList()
+                            // 获取场地列表
+                            baseDataViewModel.getSpaceList()
                         }
                         // 课表
                         1 -> {

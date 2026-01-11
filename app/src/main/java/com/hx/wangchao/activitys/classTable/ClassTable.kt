@@ -1,5 +1,7 @@
 package com.hx.wangchao.activitys.classTable
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +30,7 @@ import com.hx.wangchao.viewModels.TodoTaskStatus
 /**
  * 课表
  */
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun ClassTable(
     modifier: Modifier,
@@ -64,6 +67,15 @@ fun ClassTable(
                 )
             }
             item {
+                ClassCalendar(
+                    modifier = Modifier.padding(
+                        start = 35.convertSize(),
+                        end = 35.convertSize(),
+                        top = 35.convertSize()
+                    )
+                )
+            }
+            item {
                 Column {
                     MainTiele(
                         modifier = Modifier.padding(
@@ -85,8 +97,8 @@ fun ClassTable(
                     )
                 }
             }
-            items(lessons?.size?:0) {
-                lessons?.get(it)?.let { lesson->
+            items(lessons?.size ?: 0) {
+                lessons?.get(it)?.let { lesson ->
                     TodoItem(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -99,32 +111,36 @@ fun ClassTable(
                         title = "${lesson.courseTitle}·${lesson.title}",
                         time = "今天 15:30-17:00",
                         position = "教室: ${lesson.classTitle}",
-                        isActivate = if (lesson.status== TodoTaskStatus.ACTIVE.status) 1 else 2,
+                        isActivate = if (lesson.status == TodoTaskStatus.ACTIVE.status) 1 else 2,
                         todoIndex = 0,
                         //这是四个取值，plan是计划，这个状态下可以做激活active和推迟postponed操作，active状态可以做推迟和完成动作
                         leftItemName = if (lesson.status == TodoTaskStatus.PLAN.status) "推迟" else if (lesson.status == TodoTaskStatus.ACTIVE.status) "推迟" else "",
                         rightItemName = if (lesson.status == TodoTaskStatus.PLAN.status) "激活" else if (lesson.status == TodoTaskStatus.ACTIVE.status) "完成" else "",
                         onLeftBtnClick = {
-                            when(lesson.status) {
-                                TodoTaskStatus.PLAN.status->{
+                            when (lesson.status) {
+                                TodoTaskStatus.PLAN.status -> {
 
                                 }
-                                TodoTaskStatus.ACTIVE.status-> {
+
+                                TodoTaskStatus.ACTIVE.status -> {
 
                                 }
+
                                 else -> {}
                             }
                         },
                         onRightBtnClick = {
                             // 打开激活弹窗
-                            when(lesson.status) {
-                                TodoTaskStatus.PLAN.status->{
+                            when (lesson.status) {
+                                TodoTaskStatus.PLAN.status -> {
                                     mainViewModel.todoPageDialogType.value =
                                         TodoPageDialogType.TYPE_ACTIVATE
                                 }
-                                TodoTaskStatus.ACTIVE.status-> {
+
+                                TodoTaskStatus.ACTIVE.status -> {
 
                                 }
+
                                 else -> {}
                             }
                         }

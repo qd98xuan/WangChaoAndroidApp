@@ -4,6 +4,7 @@ import com.hx.baselibrary.Constants
 import com.hx.baselibrary.mmkv.MMKVUtils
 import com.hx.baselibrary.network.RetrofitFlowWrapper
 import com.hx.wangchao.Entity.ActiveRequestParam
+import com.hx.wangchao.Entity.AttendanceSubmitEntity
 import com.hx.wangchao.Entity.LoginRequest
 import com.hx.wangchao.api.BaseApiService
 import com.hx.wangchao.api.ClassTableApiService
@@ -114,11 +115,11 @@ object ApiRepository {
 
     // 出勤点名
     suspend fun callAttendance(
-        params: Map<String, String>
+       data: ArrayList<AttendanceSubmitEntity>
     ) = retrofitFlowWrapper.makeApiRequest(
         todoApiService.callAttendance(
             Constants.getUserToken(),
-            params
+            data
         )
     )
 

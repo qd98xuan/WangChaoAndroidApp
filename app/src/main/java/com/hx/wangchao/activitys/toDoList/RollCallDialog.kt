@@ -15,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import com.blankj.utilcode.util.ToastUtils
 import com.hx.baselibrary.base.convertSize
 import com.hx.baselibrary.base.convertSpSize
 import com.hx.wangchao.R
@@ -63,15 +66,18 @@ fun RollCallDialog(modifier: Modifier,mainViewModel: MainViewModel,todoViewModel
                 .fillMaxWidth()
                 .weight(1f)
         ) {
+            val attendanceListState by todoViewModel.attendanceListState.collectAsState()
             val testDataList = remember {
-                mutableStateListOf(
-                    RollCallEntity(name = "张三"),
-                    RollCallEntity(name = "李四"),
-                    RollCallEntity(name = "王五"),
-                    RollCallEntity(name = "赵六"),
-                    RollCallEntity(name = "钱七"),
-                )
+                todoViewModel.rollCallList
             }
+            LaunchedEffect(attendanceListState) {
+                attendanceListState?.let { state->
+                    if (state.code!=200) {
+                        ToastUtils.showShort(state.message)
+                    }
+                }
+            }
+
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(testDataList.size) {
                     RollcallItem(
@@ -96,7 +102,9 @@ fun RollCallDialog(modifier: Modifier,mainViewModel: MainViewModel,todoViewModel
             "确认提交",
             "取消",
             onConfirmClick = {
+                todoViewModel.attendance(
 
+                )
             },
             onCancelClick = {
                 mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
@@ -148,6 +156,7 @@ fun RollcallItem(modifier: Modifier, rollCallEntity: RollCallEntity) {
 // 定义一个点名实体类
 data class RollCallEntity(
     var name: String,
+    val accountId: String,
     var isSelectedRollCall: RollCall = RollCall.CHUQIN,
     val rollCallList: ArrayList<RollCallItemEntity> = arrayListOf(
         RollCallItemEntity(

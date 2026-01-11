@@ -1,14 +1,18 @@
 package com.hx.wangchao.viewModels
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hx.baselibrary.network.BaseResponse
 import com.hx.baselibrary.network.Result
 import com.hx.wangchao.Entity.ActiveRequestParam
+import com.hx.wangchao.Entity.AttendanceList
+import com.hx.wangchao.Entity.AttendanceSubmitEntity
 import com.hx.wangchao.Entity.DropdownEntity
 import com.hx.wangchao.Entity.TodoListEntity
+import com.hx.wangchao.activitys.toDoList.RollCallEntity
 import com.hx.wangchao.repository.ApiRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -27,10 +31,13 @@ class TodoViewModel : ViewModel() {
     private val _lessonState = MutableStateFlow<BaseResponse<TodoListEntity>?>(null)
     val lessonState: StateFlow<BaseResponse<TodoListEntity>?> = _lessonState
     val lessons = mutableStateOf<TodoListEntity?>(null)
+
     // 激活课程的老师
-    val activeTeacher = mutableStateOf(DropdownEntity("",""))
+    val activeTeacher = mutableStateOf(DropdownEntity("", ""))
+
     // 激活课程的场地
-    val activeSpace = mutableStateOf(DropdownEntity("",""))
+    val activeSpace = mutableStateOf(DropdownEntity("", ""))
+
     // 激活课程的id
     var activeLessonId = ""
 
@@ -50,6 +57,7 @@ class TodoViewModel : ViewModel() {
             }
         }
     }
+
     // 激活课程
     private val _activateLessonState = MutableStateFlow<BaseResponse<String>?>(null)
     val activateLessonState: StateFlow<BaseResponse<String>?> = _activateLessonState
@@ -82,7 +90,7 @@ class TodoViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             ApiRepository.postponeLesson(
                 mapOf(
-                    Pair("lessonId",activeLessonId),
+                    Pair("lessonId", activeLessonId),
                     Pair("memo", memo)
                 )
             ).collect {
@@ -106,7 +114,7 @@ class TodoViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             ApiRepository.completeLesson(
                 mapOf(
-                    Pair("lessonId",activeLessonId)
+                    Pair("lessonId", activeLessonId)
                 )
             ).collect {
                 val response = when (it) {
@@ -123,24 +131,28 @@ class TodoViewModel : ViewModel() {
     }
 
     // 出勤点名列表
-    private val _attendanceListState = MutableStateFlow<BaseResponse<List<String>>?>(null)
-    val attendanceListState: StateFlow<BaseResponse<List<String>>?> = _attendanceListState
+    private val _attendanceListState = MutableStateFlow<BaseResponse<AttendanceList>?>(null)
+    val attendanceListState: StateFlow<BaseResponse<AttendanceList>?> = _attendanceListState
+    val rollCallList = mutableStateListOf<RollCallEntity>()
     fun getAttendanceList() {
         viewModelScope.launch(Dispatchers.IO) {
             ApiRepository.getAttendanceList(
                 mapOf(
-                    Pair("lessonId",activeLessonId)
+                    Pair("lessonId", activeLessonId)
                 )
             ).collect {
                 val response = when (it) {
                     is Result.Success<*> -> {
-                        BaseResponse(200, it.data as List<String>?, "获取出勤点名列表成功")
+                        (it.data as AttendanceList).forEach { student ->
+                            rollCallList.add(RollCallEntity(name = student.accountRealName, accountId = student.accountId))
+                        }
+                        BaseResponse(200, it.data, "获取出勤点名列表成功")
                     }
 
                     is Result.Loading -> BaseResponse(-1, null, "加载中")
                     is Result.Error -> BaseResponse(it.code, null, it.msg)
                 }
-                _attendanceListState.value = response as BaseResponse<List<String>>?
+                _attendanceListState.value = response as BaseResponse<AttendanceList>?
             }
         }
     }
@@ -148,13 +160,10 @@ class TodoViewModel : ViewModel() {
     // 出勤点名
     private val _attendanceState = MutableStateFlow<BaseResponse<String>?>(null)
     val attendanceState: StateFlow<BaseResponse<String>?> = _attendanceState
-    fun attendance(attendanceList: List<String>) {
+    fun attendance(data:ArrayList<AttendanceSubmitEntity>) {
         viewModelScope.launch(Dispatchers.IO) {
             ApiRepository.callAttendance(
-                mapOf(
-                    Pair("lessonId",activeLessonId),
-                    Pair("attendanceList",attendanceList.joinToString(","))
-                )
+                data
             ).collect {
                 val response = when (it) {
                     is Result.Success<*> -> {

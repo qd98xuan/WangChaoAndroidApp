@@ -1,6 +1,8 @@
 package com.hx.wangchao.api
 
 import com.hx.wangchao.Entity.ActiveRequestParam
+import com.hx.wangchao.Entity.AttendanceList
+import com.hx.wangchao.Entity.AttendanceSubmitEntity
 import com.hx.wangchao.Entity.TodoListEntity
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
@@ -48,12 +50,12 @@ interface TodoApiService {
     fun getAttendanceList(
         @Header("Authorization") authorization: String,
         @QueryMap params: Map<String, String>
-    ): Flow<Response<Unit>>
+    ): Flow<Response<AttendanceList>>
 
     // 出勤点名
     @PUT("/lesson/attendance/call")
     fun callAttendance(
         @Header("Authorization") authorization: String,
-        @QueryMap params: Map<String, String>
+        @Body data: ArrayList<AttendanceSubmitEntity>
     ): Flow<Response<Unit>>
 }
