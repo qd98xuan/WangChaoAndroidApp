@@ -9,6 +9,7 @@ import com.hx.baselibrary.network.Result
 import com.hx.wangchao.Entity.TodoListEntity
 import com.hx.wangchao.repository.ApiRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -19,8 +20,7 @@ import kotlinx.coroutines.launch
 class ClassTableViewModel : ViewModel() {
     // 获取7日课程安排
     val lessons = mutableStateOf<TodoListEntity?>(null)
-    private val _lessonState = MutableStateFlow<BaseResponse<TodoListEntity>?>(null)
-    val lessonState: StateFlow<BaseResponse<TodoListEntity>?> = _lessonState
+    val lessonState = Channel<BaseResponse<String>>(Channel.BUFFERED)
     fun getWeeklyLessons() {
         viewModelScope.launch(Dispatchers.IO) {
             ApiRepository.getWeeklyLessons().collect {
@@ -30,11 +30,10 @@ class ClassTableViewModel : ViewModel() {
                     }
 
                     is Result.Loading -> {
-                        _lessonState.value = BaseResponse(-1, null, "加载中")
                     }
 
                     is Result.Error -> {
-                        _lessonState.value = BaseResponse(it.code, null, it.msg)
+                        lessonState.send(BaseResponse(it.code, null, it.msg))
                     }
                 }
             }

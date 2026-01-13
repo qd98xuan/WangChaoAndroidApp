@@ -10,6 +10,7 @@ import com.hx.wangchao.Entity.SpaceEntity
 import com.hx.wangchao.Entity.TeacherEntity
 import com.hx.wangchao.repository.ApiRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,8 +19,7 @@ import kotlinx.coroutines.launch
  * 基础数据ViewModel
  */
 class BaseDataViewModel : ViewModel() {
-    private val _baseDataStatus = MutableStateFlow<BaseResponse<String>?>(null)
-    val baseDatatStatus: StateFlow<BaseResponse<String>?> = _baseDataStatus
+    val baseDatatStatus = Channel<BaseResponse<String>>(Channel.BUFFERED)
 
     // 老师列表
     val teachers = mutableStateListOf<DropdownEntity>()
@@ -38,11 +38,10 @@ class BaseDataViewModel : ViewModel() {
                     }
 
                     is Result.Error -> {
-                        _baseDataStatus.value = BaseResponse(it.code, "", it.msg)
+                        baseDatatStatus.send(BaseResponse(it.code, "", it.msg))
                     }
 
                     is Result.Loading -> {
-                        _baseDataStatus.value = BaseResponse(-1, "", "加载中...")
                     }
                 }
             }
@@ -66,11 +65,10 @@ class BaseDataViewModel : ViewModel() {
                     }
 
                     is Result.Error -> {
-                        _baseDataStatus.value = BaseResponse(it.code, "", it.msg)
+                        baseDatatStatus.send(BaseResponse(it.code, "", it.msg))
                     }
 
                     is Result.Loading -> {
-                        _baseDataStatus.value = BaseResponse(-1, "", "加载中...")
                     }
                 }
             }

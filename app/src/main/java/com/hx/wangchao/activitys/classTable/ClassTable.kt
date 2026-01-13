@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import com.hx.wangchao.viewModels.ClassTableViewModel
 import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoPageDialogType
 import com.hx.wangchao.viewModels.TodoTaskStatus
+import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
  * 课表
@@ -45,9 +47,12 @@ fun ClassTable(
             mainViewModel.title
         }
         // 周课程状态
-        val lessonState by classTableViewModel.lessonState.collectAsState()
-        if (lessonState?.code != -1) {
-            ToastUtils.showShort(lessonState?.message ?: "")
+        LaunchedEffect(Unit) {
+            classTableViewModel.lessonState.receiveAsFlow().collect {
+                if (it.code != 200) {
+                    ToastUtils.showShort(it.message)
+                }
+            }
         }
         StatusBar(modifier = Modifier, title, userName) {
 

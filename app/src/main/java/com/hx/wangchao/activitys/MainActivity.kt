@@ -54,6 +54,7 @@ import com.hx.wangchao.activitys.toDoList.RollcallItem
 import com.hx.wangchao.activitys.toDoList.ToDoList
 import com.hx.wangchao.activitys.toDoList.TodoTask
 import com.hx.wangchao.ui.theme.c_047B83
+import com.hx.wangchao.ui.theme.c_56000000
 import com.hx.wangchao.ui.theme.c_666666
 import com.hx.wangchao.ui.theme.c_C1DFE1
 import com.hx.wangchao.ui.theme.c_F2F8F9
@@ -63,6 +64,7 @@ import com.hx.wangchao.viewModels.ClassTableViewModel
 import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoPageDialogType
 import com.hx.wangchao.viewModels.TodoViewModel
+import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
  * 主页面
@@ -93,12 +95,19 @@ class MainActivity : BaseAppActivity() {
             var title by remember {
                 mainViewModel.title
             }
-            val baseDatatStatus by baseDataViewModel.baseDatatStatus.collectAsState()
-            if (baseDatatStatus?.code != -1) {
-                ToastUtils.showShort(baseDatatStatus?.message)
+            LaunchedEffect(Unit) {
+                baseDataViewModel.baseDatatStatus.receiveAsFlow().collect {
+                    if (it.code != 200) {
+                        ToastUtils.showShort(it.message)
+                    }
+                }
             }
             LaunchedEffect(selectIndex) {
                 title = mainViewModel.navList[selectIndex].title
+                // 获取老师列表
+                baseDataViewModel.getTeacherList()
+                // 获取场地列表
+                baseDataViewModel.getSpaceList()
             }
             Box(
                 modifier = Modifier
@@ -126,10 +135,6 @@ class MainActivity : BaseAppActivity() {
                                 mainViewModel,
                                 todoViewModel
                             )
-                            // 获取老师列表
-                            baseDataViewModel.getTeacherList()
-                            // 获取场地列表
-                            baseDataViewModel.getSpaceList()
                         }
                         // 课表
                         1 -> {
@@ -164,8 +169,18 @@ class MainActivity : BaseAppActivity() {
                         selectIndex = it
                     }
                 }
-                val todoPageDialogType by remember {
+                var todoPageDialogType by remember {
                     mainViewModel.todoPageDialogType
+                }
+                // 弹窗的遮罩
+                if (todoPageDialogType != TodoPageDialogType.TYPE_NULL) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = c_56000000)
+                            .clickable {
+                                todoPageDialogType = TodoPageDialogType.TYPE_NULL
+                            })
                 }
                 when (todoPageDialogType) {
                     TodoPageDialogType.TYPE_ACTIVATE -> {
@@ -186,7 +201,11 @@ class MainActivity : BaseAppActivity() {
                     }
 
                     TodoPageDialogType.TYPE_ROLLCALL -> {
-                        RollCallDialog(modifier = Modifier,mainViewModel,todoViewModel)
+                        RollCallDialog(
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                            mainViewModel,
+                            todoViewModel
+                        )
                     }
 
                     else -> {}

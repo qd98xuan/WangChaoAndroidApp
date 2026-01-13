@@ -42,12 +42,18 @@ import com.hx.wangchao.viewModels.BaseDataViewModel
 import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoPageDialogType
 import com.hx.wangchao.viewModels.TodoViewModel
+import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
  * 激活对话框
  */
 @Composable
-fun ActivateDialog(modifier: Modifier, mainViewModel: MainViewModel,baseDataViewModel: BaseDataViewModel,todoViewModel: TodoViewModel) {
+fun ActivateDialog(
+    modifier: Modifier,
+    mainViewModel: MainViewModel,
+    baseDataViewModel: BaseDataViewModel,
+    todoViewModel: TodoViewModel
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -127,23 +133,24 @@ fun ActivateDialog(modifier: Modifier, mainViewModel: MainViewModel,baseDataView
                 mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
             }
         )
-        val activateLessonState by todoViewModel.activateLessonState.collectAsState()
-        // 检测是否激活课程成功
-        LaunchedEffect(activateLessonState) {
-            when(activateLessonState?.code) {
-                200->{
-                    ToastUtils.showShort("激活课程成功")
-                    mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
-                    // 重新获取今日课程安排
-                    todoViewModel.getTodayLessons()
-                    // 刷新一下数据
-                    activeTeacher=DropdownEntity("","")
-                    activeSpace = DropdownEntity("","")
-                    todoViewModel.activeLessonId = ""
-                }
-                -1->{}
-                else->{
-                    ToastUtils.showShort(activateLessonState?.message?:"")
+        LaunchedEffect(Unit) {
+            // 检测是否激活课程成功
+            todoViewModel.activateLessonState.receiveAsFlow().collect {
+                when (it.code) {
+                    200 -> {
+                        ToastUtils.showShort("激活课程成功")
+                        mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
+                        // 重新获取今日课程安排
+                        todoViewModel.getTodayLessons()
+                        // 刷新一下数据
+                        activeTeacher = DropdownEntity("", "")
+                        activeSpace = DropdownEntity("", "")
+                        todoViewModel.activeLessonId = ""
+                    }
+
+                    else -> {
+                        ToastUtils.showShort(it.message)
+                    }
                 }
             }
         }

@@ -28,6 +28,7 @@ import com.hx.wangchao.R
 import com.hx.wangchao.viewModels.SplashViewModel
 import com.hx.wangchao.viewModels.TodoViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
  * 启动页
@@ -45,19 +46,18 @@ class SplashActivity : BaseAppActivity() {
         setContent {
             LaunchedEffect(true) {
                 todoViewMode.getTodayLessons()
-            }
-            val lessonState by todoViewMode.lessonState.collectAsState()
-            LaunchedEffect(lessonState) {
-                if (lessonState?.code == 200) {
-                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                    finish()
-                } else if (lessonState?.code == 500) {
-                    startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
-                    finish()
-                } else {
-                    ToastUtils.showShort(lessonState?.message)
+                todoViewMode.lessonState.receiveAsFlow().collect {
+                    if (it.code == 200) {
+                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                        finish()
+                    } else if (it.code == 500) {
+                        startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+                        finish()
+                    } else {
+                    }
                 }
             }
+
             Box(
                 modifier = Modifier
                     .paint(

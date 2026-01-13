@@ -66,7 +66,7 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
 
         }
         // 获取今日课程
-        LaunchedEffect(true) {
+        LaunchedEffect(Unit) {
             todoViewModel.getTodayLessons()
         }
 

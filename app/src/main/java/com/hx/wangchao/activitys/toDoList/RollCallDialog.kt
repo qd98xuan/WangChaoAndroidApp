@@ -39,15 +39,18 @@ import com.hx.wangchao.ui.theme.c_333333
 import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoPageDialogType
 import com.hx.wangchao.viewModels.TodoViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 
 
 /**
  * 点名对话框
  */
 @Composable
-fun RollCallDialog(modifier: Modifier,mainViewModel: MainViewModel,todoViewModel: TodoViewModel) {
+fun RollCallDialog(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: TodoViewModel) {
     Column(
         modifier = modifier
+            .height(1477.convertSize())
             .fillMaxWidth()
             .background(
                 color = Color.White,
@@ -68,21 +71,21 @@ fun RollCallDialog(modifier: Modifier,mainViewModel: MainViewModel,todoViewModel
                 .weight(1f)
         ) {
             // 监听点名列表结果
-            val attendanceListState by todoViewModel.attendanceListState.collectAsState()
             val testDataList = remember {
                 todoViewModel.rollCallList
             }
-            LaunchedEffect(attendanceListState) {
-                attendanceListState?.let { state->
-                    if (state.code!=200) {
-                        ToastUtils.showShort(state.message)
+            LaunchedEffect(Unit) {
+                todoViewModel.attendanceListState.receiveAsFlow().collect{
+                    if (it.code != 200) {
+                        ToastUtils.showShort(it.message)
                     }
                 }
-            }
-            // 监听提交点名结果
-            val attendanceState by todoViewModel.attendanceState.collectAsState()
-            LaunchedEffect(attendanceState) {
-                ToastUtils.showShort(attendanceState?.message)
+                // 监听提交点名结果
+                todoViewModel.attendanceState.receiveAsFlow().collect {
+                    if (it.code != 200) {
+                        ToastUtils.showShort(it.message)
+                    }
+                }
             }
 
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
@@ -95,15 +98,19 @@ fun RollCallDialog(modifier: Modifier,mainViewModel: MainViewModel,todoViewModel
                         testDataList.get(it)
                     ) {
                         todoViewModel.attendance(
-                            AttendanceSubmitEntity(todoViewModel.activeLessonId,it.accountId,
-                                when(it.isSelectedRollCall) {
+                            AttendanceSubmitEntity(
+                                todoViewModel.activeLessonId, it.accountId,
+                                when (it.isSelectedRollCall) {
                                     RollCall.CHUQIN -> "NORMAL"
                                     RollCall.CHIDAO -> "LEAVE"
                                     RollCall.BUKE -> "MAKEUP"
                                     RollCall.QUEQIN -> "ABSENCE"
                                     RollCall.QINGJIA -> ""
-                                    else -> {""}
-                                })
+                                    else -> {
+                                        ""
+                                    }
+                                }
+                            )
                         )
                     }
                 }
@@ -114,7 +121,11 @@ fun RollCallDialog(modifier: Modifier,mainViewModel: MainViewModel,todoViewModel
 
 
 @Composable
-fun RollcallItem(modifier: Modifier, rollCallEntity: RollCallEntity,onValueChange:(data:RollCallEntity)->Unit) {
+fun RollcallItem(
+    modifier: Modifier,
+    rollCallEntity: RollCallEntity,
+    onValueChange: (data: RollCallEntity) -> Unit
+) {
     var isSelectedRollCall by remember {
         mutableStateOf(rollCallEntity.isSelectedRollCall)
     }
