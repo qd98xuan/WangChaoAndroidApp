@@ -60,6 +60,13 @@ enum class TodoPageDialogType(
     TYPE_ROLLCALL(3), // 点名弹窗
 }
 
+// 当前页面类型
+enum class MainType(val type: Int) {
+    TYPE_NULL(0), // 无
+    TYPE_TODOTASK(1), // 待办任务
+    TYPE_QINGJIA(2) // 请假
+}
+
 // 待办任务状态
 enum class TodoTaskStatus(
     val status: String,

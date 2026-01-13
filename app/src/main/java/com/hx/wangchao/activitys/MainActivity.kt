@@ -104,10 +104,12 @@ class MainActivity : BaseAppActivity() {
             }
             LaunchedEffect(selectIndex) {
                 title = mainViewModel.navList[selectIndex].title
-                // 获取老师列表
-                baseDataViewModel.getTeacherList()
-                // 获取场地列表
-                baseDataViewModel.getSpaceList()
+                if (selectIndex==0) {
+                    // 获取老师列表
+                    baseDataViewModel.getTeacherList()
+                    // 获取场地列表
+                    baseDataViewModel.getSpaceList()
+                }
             }
             Box(
                 modifier = Modifier

@@ -48,6 +48,7 @@ fun ClassTable(
         }
         // 周课程状态
         LaunchedEffect(Unit) {
+            classTableViewModel.getWeeklyLessons()
             classTableViewModel.lessonState.receiveAsFlow().collect {
                 if (it.code != 200) {
                     ToastUtils.showShort(it.message)
