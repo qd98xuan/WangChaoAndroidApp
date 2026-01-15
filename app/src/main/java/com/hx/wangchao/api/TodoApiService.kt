@@ -4,6 +4,8 @@ import com.hx.wangchao.Entity.ActiveRequestParam
 import com.hx.wangchao.Entity.AttendanceList
 import com.hx.wangchao.Entity.AttendanceSubmitEntity
 import com.hx.wangchao.Entity.TodoListEntity
+import com.hx.wangchao.Entity.TodoListEntityItem
+import com.hx.wangchao.Entity.TodoTaskWeeklyEntity
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.Body
@@ -23,6 +25,12 @@ interface TodoApiService {
     fun getTodayLessons(
         @Header("Authorization") authorization: String,
     ): Flow<Response<TodoListEntity>>
+
+    // 获取上周课程安排
+    @GET("/todo/lesson/task/weekly")
+    fun getTaskWeeklyLessons(
+        @Header("Authorization") authorization: String,
+    ): Flow<Response<ArrayList<TodoTaskWeeklyEntity>>>
 
     // 激活课程
     @PUT("/lesson/active")

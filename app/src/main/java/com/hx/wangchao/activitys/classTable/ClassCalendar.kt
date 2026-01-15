@@ -32,6 +32,7 @@ import com.hx.wangchao.ui.theme.c_666666
 import com.hx.wangchao.ui.theme.c_9BCACD
 import com.hx.wangchao.ui.theme.c_D5D5D5
 import com.hx.wangchao.ui.theme.c_E5E5E5
+import com.hx.wangchao.viewModels.ClassTableViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -40,7 +41,7 @@ import java.util.Locale
  */
 @RequiresApi(Build.VERSION_CODES.N)
 @Composable
-fun ClassCalendar(modifier: Modifier) {
+fun ClassCalendar(modifier: Modifier,classTableViewModel: ClassTableViewModel) {
     val calendarList = remember {
         mutableStateListOf<String>()
     }
@@ -84,15 +85,10 @@ fun ClassCalendar(modifier: Modifier) {
             }
         }
         val timeList = remember {
-            mutableStateListOf(
-                arrayListOf(CalendarItem("英", 0, false), CalendarItem("英", 1, false)),
-                arrayListOf(CalendarItem("语", 2, true), CalendarItem("语", 3, true)),
-                arrayListOf(CalendarItem("数", 5, false)),
-                arrayListOf(CalendarItem("奥", 2, false)),
-            )
+            classTableViewModel.timeList
         }
         timeList.forEach {
-            CalendarItem(Modifier, time = "09:00-10:00", calendarList = it)
+            CalendarItem(Modifier, time = it[0].time, calendarList = it)
             Box(
                 modifier = Modifier
                     .padding(start = 35.convertSize(), end = 35.convertSize())

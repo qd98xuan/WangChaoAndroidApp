@@ -61,6 +61,7 @@ import com.hx.wangchao.ui.theme.c_F2F8F9
 import com.hx.wangchao.utils.main
 import com.hx.wangchao.viewModels.BaseDataViewModel
 import com.hx.wangchao.viewModels.ClassTableViewModel
+import com.hx.wangchao.viewModels.MainType
 import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoPageDialogType
 import com.hx.wangchao.viewModels.TodoViewModel
@@ -80,6 +81,9 @@ class MainActivity : BaseAppActivity() {
 
     // 基础数据ViewModel
     val baseDataViewModel by lazy { ViewModelProvider(this)[BaseDataViewModel::class.java] }
+
+    // 课堂相关的ViewModel
+    val lessonViewModel by lazy { ViewModelProvider(this)[com.hx.wangchao.viewModels.LessonViewModel::class.java] }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,10 +105,15 @@ class MainActivity : BaseAppActivity() {
                         ToastUtils.showShort(it.message)
                     }
                 }
+                todoViewModel.todoTaskChannel.receiveAsFlow().collect {
+                    if (it.code != 200) {
+                        ToastUtils.showShort(it.message)
+                    }
+                }
             }
             LaunchedEffect(selectIndex) {
                 title = mainViewModel.navList[selectIndex].title
-                if (selectIndex==0) {
+                if (selectIndex == 0) {
                     // 获取老师列表
                     baseDataViewModel.getTeacherList()
                     // 获取场地列表
@@ -123,45 +132,64 @@ class MainActivity : BaseAppActivity() {
                         )
                     )
             ) {
+
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    when (selectIndex) {
-                        // 待办
-                        0 -> {
-                            ToDoList(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f, fill = true),
-                                mainViewModel,
-                                todoViewModel
-                            )
-                        }
-                        // 课表
-                        1 -> {
-                            ClassTable(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f, fill = true),
-                                mainViewModel,
-                                classTable
-                            )
-                        }
-
-                        2 -> {}
-                    }
                     val userName by remember {
                         mainViewModel.userName
                     }
                     val todoTaskList = remember {
                         mainViewModel.todoTaskList
                     }
-//                    TodoTask(modifier = Modifier
-//                        .fillMaxWidth()
-//                        .weight(1f, fill = true),
-//                        userName = userName,todoTaskList)
+                    // 主页面的类型
+                    val mainType by remember {
+                        mainViewModel.mainType
+                    }
+                    when (mainType) {
+                        MainType.TYPE_NULL -> {
+                            when (selectIndex) {
+                                // 待办
+                                0 -> {
+                                    ToDoList(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .weight(1f, fill = true),
+                                        mainViewModel,
+                                        todoViewModel,
+                                        lessonViewModel
+                                    )
+                                }
+                                // 课表
+                                1 -> {
+                                    ClassTable(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .weight(1f, fill = true),
+                                        mainViewModel,
+                                        classTable
+                                    )
+                                }
 
+                                2 -> {}
+                            }
+                        }
+                        MainType.TYPE_TODOTASK -> {
+                            TodoTask(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f, fill = true),
+                                userName = userName, todoTaskList,
+                                mainViewModel,
+                                lessonViewModel
+                            )
+                        }
+
+                        MainType.TYPE_QINGJIA -> {
+
+                        }
+                    }
                     Navigation(
                         modifier = Modifier
                             .height(158.convertSize()),

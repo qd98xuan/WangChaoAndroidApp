@@ -45,6 +45,8 @@ import com.hx.wangchao.ui.theme.c_999999
 import com.hx.wangchao.ui.theme.c_9BCACD
 import com.hx.wangchao.ui.theme.c_E5E5E5
 import com.hx.wangchao.utils.ScreenUtils.px
+import com.hx.wangchao.viewModels.LessonViewModel
+import com.hx.wangchao.viewModels.MainType
 import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoPageDialogType
 import com.hx.wangchao.viewModels.TodoTaskStatus
@@ -54,7 +56,12 @@ import com.hx.wangchao.viewModels.TodoViewModel
  * 待办页面
  */
 @Composable
-fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: TodoViewModel) {
+fun ToDoList(
+    modifier: Modifier,
+    mainViewModel: MainViewModel,
+    todoViewModel: TodoViewModel,
+    lessonViewModel: LessonViewModel
+) {
     Column(modifier = modifier) {
         val userName by remember {
             mainViewModel.userName
@@ -65,14 +72,20 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
         StatusBar(modifier = Modifier, title, userName) {
 
         }
-        // 获取今日课程
         LaunchedEffect(Unit) {
+            // 获取今日课程
             todoViewModel.getTodayLessons()
+            // 重新获取任务课程安排
+            todoViewModel.getTaskWeeklyLessons()
         }
 
         // 当天的课程安排
         val lessons by remember {
             todoViewModel.lessons
+        }
+        // 待办任务列表
+        val todoTaskList = remember {
+            todoViewModel.todoTaskList
         }
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -98,43 +111,49 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
                             )
                             .height(348.convertSize()),
                         title = "${lesson.courseTitle}·${lesson.title}",
-                        time = "今天 15:30-17:00",
+                        time = "今天:${
+                            lesson.beginTime.split(" ").get(1)
+                        }-${lesson.endTime.split(" ").get(1)}",
                         position = "教室: ${lesson.classTitle}",
-                        isActivate = if (lesson.status== TodoTaskStatus.ACTIVE.status) 1 else 2,
+                        isActivate = if (lesson.status == TodoTaskStatus.ACTIVE.status) 1 else 2,
                         todoIndex = 0,
                         //这是四个取值，plan是计划，这个状态下可以做激活active和推迟postponed操作，active状态可以做推迟和完成动作
                         leftItemName = if (lesson.status == TodoTaskStatus.PLAN.status) "推迟" else if (lesson.status == TodoTaskStatus.ACTIVE.status) "推迟" else "",
                         rightItemName = if (lesson.status == TodoTaskStatus.PLAN.status) "激活" else if (lesson.status == TodoTaskStatus.ACTIVE.status) "点名" else "",
                         onLeftBtnClick = {
-                            when(lesson.status) {
-                                TodoTaskStatus.PLAN.status->{
+                            when (lesson.status) {
+                                TodoTaskStatus.PLAN.status -> {
                                     todoViewModel.activeLessonId = lesson.id
                                     mainViewModel.todoPageDialogType.value =
                                         TodoPageDialogType.TYPE_DELAY
                                 }
-                                TodoTaskStatus.ACTIVE.status-> {
+
+                                TodoTaskStatus.ACTIVE.status -> {
                                     todoViewModel.activeLessonId = lesson.id
                                     mainViewModel.todoPageDialogType.value =
                                         TodoPageDialogType.TYPE_DELAY
                                 }
+
                                 else -> {}
                             }
                         },
                         onRightBtnClick = {
                             // 打开激活弹窗
-                            when(lesson.status) {
-                                TodoTaskStatus.PLAN.status->{
+                            when (lesson.status) {
+                                TodoTaskStatus.PLAN.status -> {
                                     todoViewModel.activeLessonId = lesson.id
                                     mainViewModel.todoPageDialogType.value =
                                         TodoPageDialogType.TYPE_ACTIVATE
                                 }
-                                TodoTaskStatus.ACTIVE.status-> {
+
+                                TodoTaskStatus.ACTIVE.status -> {
                                     // 点名
                                     todoViewModel.activeLessonId = lesson.id
                                     mainViewModel.todoPageDialogType.value =
                                         TodoPageDialogType.TYPE_ROLLCALL
                                     todoViewModel.getAttendanceList()
                                 }
+
                                 else -> {}
                             }
                         }
@@ -152,7 +171,38 @@ fun ToDoList(modifier: Modifier, mainViewModel: MainViewModel, todoViewModel: To
                     title = "待办任务"
                 )
             }
+            items(todoTaskList.size) {
+                todoTaskList.get(it).let { todo ->
+                    TodoItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 20.convertSize(),
+                                end = 20.convertSize(),
+                                bottom = 35.convertSize()
+                            )
+                            .height(348.convertSize()),
+                        title = todo.classTitle,
+                        time = "今天:${todo.beginTime.split(" ").get(1)}-${
+                            todo.endTime.split(" ").get(1)
+                        }",
+                        position = todo.classTitle,
+                        isActivate = 0,
+                        todoIndex = it + 1,
+                        leftItemName = "待办",
+                        rightItemName = "结课",
+                        onLeftBtnClick = {
+                            // 打开待办任务页面
+                            lessonViewModel.lessonId = todo.id
+                            mainViewModel.mainType.value = MainType.TYPE_TODOTASK
+                        },
+                        onRightBtnClick = {
 
+                        }
+                    )
+
+                }
+            }
 
 
             item {

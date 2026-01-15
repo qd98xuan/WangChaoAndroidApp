@@ -4,13 +4,17 @@ import com.hx.baselibrary.Constants
 import com.hx.baselibrary.mmkv.MMKVUtils
 import com.hx.baselibrary.network.RetrofitFlowWrapper
 import com.hx.wangchao.Entity.ActiveRequestParam
+import com.hx.wangchao.Entity.AddPerformanceEntity
 import com.hx.wangchao.Entity.AttendanceSubmitEntity
 import com.hx.wangchao.Entity.LoginRequest
 import com.hx.wangchao.api.BaseApiService
 import com.hx.wangchao.api.ClassTableApiService
+import com.hx.wangchao.api.LessonApiService
 import com.hx.wangchao.api.PermissionApiService
 import com.hx.wangchao.api.TodoApiService
+import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.PUT
 
 /**
@@ -30,6 +34,9 @@ object ApiRepository {
     private val baseApiService =
         retrofitFlowWrapper.create(Constants.BASE_URL, BaseApiService::class.java)
 
+    private val lessonApiService =
+        retrofitFlowWrapper.create(Constants.BASE_URL, LessonApiService::class.java)
+
 
     // 登录
     suspend fun login(
@@ -45,6 +52,15 @@ object ApiRepository {
     suspend fun getTodayLessons() =
         retrofitFlowWrapper.makeApiRequest(
             todoApiService.getTodayLessons(
+                Constants.getUserToken()
+            )
+        )
+
+
+    // 获取上周课程安排
+    suspend fun getTaskWeeklyLessons() =
+        retrofitFlowWrapper.makeApiRequest(
+            todoApiService.getTaskWeeklyLessons(
                 Constants.getUserToken()
             )
         )
@@ -123,5 +139,16 @@ object ApiRepository {
         )
     )
 
+    // Lesson上课表现列表
+    suspend fun getLessonPerformanceList() =
+        retrofitFlowWrapper.makeApiRequest(
+            lessonApiService.getLessonPerformanceList(Constants.getUserToken())
+        )
+
+    // Lesson上课表现增加
+    suspend fun addLessonPerformance(data: AddPerformanceEntity) =
+        retrofitFlowWrapper.makeApiRequest(
+            lessonApiService.addLessonPerformance(Constants.getUserToken(),data)
+        )
 
 }

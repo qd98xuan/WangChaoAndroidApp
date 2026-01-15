@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.blankj.utilcode.util.LogUtils
 import com.hx.baselibrary.network.BaseResponse
 import com.hx.baselibrary.network.Result
 import com.hx.wangchao.Entity.ActiveRequestParam
@@ -12,6 +13,8 @@ import com.hx.wangchao.Entity.AttendanceList
 import com.hx.wangchao.Entity.AttendanceSubmitEntity
 import com.hx.wangchao.Entity.DropdownEntity
 import com.hx.wangchao.Entity.TodoListEntity
+import com.hx.wangchao.Entity.TodoListEntityItem
+import com.hx.wangchao.Entity.TodoTaskWeeklyEntity
 import com.hx.wangchao.activitys.toDoList.RollCall
 import com.hx.wangchao.activitys.toDoList.RollCallEntity
 import com.hx.wangchao.repository.ApiRepository
@@ -54,6 +57,29 @@ class TodoViewModel : ViewModel() {
                     is Result.Loading -> {}
                     is Result.Error -> {
                         lessonState.send(BaseResponse(it.code, "", it.msg))
+                    }
+                }
+            }
+        }
+    }
+
+    // 获取上周课程安排
+    // 获取上周课程安排
+    val todoTaskList = mutableStateListOf<TodoTaskWeeklyEntity>()
+    val todoTaskChannel = Channel<BaseResponse<String>>(Channel.BUFFERED)
+    fun getTaskWeeklyLessons() {
+        viewModelScope.launch(Dispatchers.IO) {
+            ApiRepository.getTaskWeeklyLessons().collect {
+                when (it) {
+                    is Result.Success<*> -> {
+                        todoTaskList.clear()
+                        todoTaskList.addAll(it.data as ArrayList<TodoTaskWeeklyEntity>)
+                    }
+
+                    is Result.Loading -> {}
+                    is Result.Error -> {
+                        LogUtils.e("获取上周课程安排失败：${it.msg}")
+                        todoTaskChannel.send(BaseResponse(it.code, null, it.msg))
                     }
                 }
             }

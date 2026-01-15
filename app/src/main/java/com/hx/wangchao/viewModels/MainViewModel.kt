@@ -14,6 +14,8 @@ class MainViewModel : ViewModel() {
 
     // 待办页面弹窗类型
     val todoPageDialogType = mutableStateOf(TodoPageDialogType.TYPE_NULL)
+    // 当前页面类型
+    val mainType = mutableStateOf(MainType.TYPE_NULL)
     val navList = mutableStateListOf<NavItem>().apply {
         add(NavItem("待办", R.drawable.todo))
         add(NavItem("课表", R.drawable.course))

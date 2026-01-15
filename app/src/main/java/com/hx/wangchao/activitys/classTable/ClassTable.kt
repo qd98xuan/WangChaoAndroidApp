@@ -58,7 +58,7 @@ fun ClassTable(
         StatusBar(modifier = Modifier, title, userName) {
 
         }
-        val lessons by remember {
+        val lessons = remember {
             classTableViewModel.lessons
         }
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
@@ -78,7 +78,8 @@ fun ClassTable(
                         start = 35.convertSize(),
                         end = 35.convertSize(),
                         top = 35.convertSize()
-                    )
+                    ),
+                    classTableViewModel
                 )
             }
             item {

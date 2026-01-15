@@ -40,6 +40,7 @@ import androidx.compose.ui.text.TextStyle
 import coil.compose.AsyncImage
 import com.hx.baselibrary.base.convertSize
 import com.hx.baselibrary.base.convertSpSize
+import com.hx.wangchao.Entity.AddPerformanceEntity
 import com.hx.wangchao.R
 import com.hx.wangchao.activitys.StatusBar
 import com.hx.wangchao.ui.theme.c_01047B83
@@ -47,13 +48,23 @@ import com.hx.wangchao.ui.theme.c_047B83
 import com.hx.wangchao.ui.theme.c_10047B83
 import com.hx.wangchao.ui.theme.c_999999
 import com.hx.wangchao.ui.theme.c_F2F8F9
+import com.hx.wangchao.viewModels.LessonViewModel
+import com.hx.wangchao.viewModels.MainType
+import com.hx.wangchao.viewModels.MainViewModel
 import com.hx.wangchao.viewModels.TodoTaskItem
+import com.hx.wangchao.viewModels.TodoViewModel
 
 /**
  * 代办任务
  */
 @Composable
-fun TodoTask(modifier: Modifier, userName: String, todoTaskList: SnapshotStateList<TodoTaskItem>) {
+fun TodoTask(
+    modifier: Modifier,
+    userName: String,
+    todoTaskList: SnapshotStateList<TodoTaskItem>,
+    mainViewModel: MainViewModel,
+    lessonViewModel: LessonViewModel
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -65,7 +76,7 @@ fun TodoTask(modifier: Modifier, userName: String, todoTaskList: SnapshotStateLi
     ) {
         Column {
             StatusBar(modifier = Modifier, "待办任务", userName, showBack = true) {
-
+                mainViewModel.mainType.value = MainType.TYPE_NULL
             }
             MainTiele(
                 modifier = Modifier,
@@ -94,13 +105,22 @@ fun TodoTask(modifier: Modifier, userName: String, todoTaskList: SnapshotStateLi
                         title = todoTaskList[index].taskTitle
                     ) {
                         todoSelect = todoTaskList[index].taskTitle
+                        when (todoSelect) {
+                            "课堂测验" -> {}
+                            "课堂表现" -> {
+                                lessonViewModel.getLessonPerformanceList()
+                            }
+                            "布置作业" -> {}
+                            "作业检查" -> {}
+                            "课照上传" -> {}
+                        }
                     }
                 }
             }
             // 判断选择的哪个待办
             when (todoSelect) {
                 "课堂测验" -> ClassTest()
-                "课堂表现" -> ClassPerformance()
+                "课堂表现" -> ClassPerformance(lessonViewModel)
                 "布置作业" -> AssignHomework(
                     modifier = Modifier.padding(
                         start = 35.convertSize(),
@@ -108,6 +128,7 @@ fun TodoTask(modifier: Modifier, userName: String, todoTaskList: SnapshotStateLi
                         top = 35.convertSize()
                     ), ""
                 ) {}
+
                 "作业检查" -> HomeworkCheck()
                 "课照上传" -> ClassPhotoUpload()
             }
@@ -170,7 +191,10 @@ fun TodoItemCheck(
 
 // 课堂表现
 @Composable
-fun ClassPerformance() {
+fun ClassPerformance(lessonViewModel: LessonViewModel) {
+    val performanceList = remember {
+        lessonViewModel.performanceList
+    }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -180,15 +204,21 @@ fun ClassPerformance() {
                 top = 35.convertSize()
             )
     ) {
-        items(3) {
-            ClassPerformanceItem(
-                modifier = Modifier.padding(
-                    bottom = 35.convertSize()
-                ),
-                name = "王十二",
-                text = "",
-            ) {
-
+        items(performanceList.size) {
+            performanceList.get(it).let { student->
+                ClassPerformanceItem(
+                    modifier = Modifier.padding(
+                        bottom = 35.convertSize()
+                    ),
+                    name = student.accountRealname,
+                    text = student.review,
+                ) {
+                    lessonViewModel.addLessonPerformance(AddPerformanceEntity(
+                        lessonViewModel.lessonId,
+                        student.accountId,
+                        it
+                    ))
+                }
             }
         }
     }
@@ -445,6 +475,7 @@ fun HomeworkCheck() {
         }
     }
 }
+
 // 作业检查item
 @Composable
 fun HomeworkCheckItem(
@@ -453,8 +484,9 @@ fun HomeworkCheckItem(
     text: String,
     images: ArrayList<String>,
     files: ArrayList<String>,
-    uploadClick:()-> Unit,
-    onTextChange: (String) -> Unit) {
+    uploadClick: () -> Unit,
+    onTextChange: (String) -> Unit
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -596,7 +628,12 @@ fun ClassPhotoUpload() {
 
 // 课照上传item
 @Composable
-fun ClassPhotoUploadItem(modifier: Modifier,name: String,images: ArrayList<String>,uploadClick:()-> Unit) {
+fun ClassPhotoUploadItem(
+    modifier: Modifier,
+    name: String,
+    images: ArrayList<String>,
+    uploadClick: () -> Unit
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()

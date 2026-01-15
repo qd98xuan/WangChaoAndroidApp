@@ -142,6 +142,8 @@ fun ActivateDialog(
                         mainViewModel.todoPageDialogType.value = TodoPageDialogType.TYPE_NULL
                         // 重新获取今日课程安排
                         todoViewModel.getTodayLessons()
+                        // 重新获取任务课程安排
+                        todoViewModel.getTaskWeeklyLessons()
                         // 刷新一下数据
                         activeTeacher = DropdownEntity("", "")
                         activeSpace = DropdownEntity("", "")

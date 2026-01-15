@@ -4,6 +4,8 @@ package com.hx.wangchao.Entity
  * 日历图的实体类
  */
 data class CalendarItem(
+    // 时间
+    val time: String,
     // 名称
     val name: String,
     // 索引在哪个位置就放置到哪里0-6
