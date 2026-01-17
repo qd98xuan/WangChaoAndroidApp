@@ -51,6 +51,7 @@ import com.hx.wangchao.ui.theme.c_F2F8F9
 import com.hx.wangchao.viewModels.LessonViewModel
 import com.hx.wangchao.viewModels.MainType
 import com.hx.wangchao.viewModels.MainViewModel
+import com.hx.wangchao.viewModels.OSSViewModel
 import com.hx.wangchao.viewModels.TodoTaskItem
 import com.hx.wangchao.viewModels.TodoViewModel
 
@@ -63,7 +64,8 @@ fun TodoTask(
     userName: String,
     todoTaskList: SnapshotStateList<TodoTaskItem>,
     mainViewModel: MainViewModel,
-    lessonViewModel: LessonViewModel
+    lessonViewModel: LessonViewModel,
+    ossViewModel: OSSViewModel
 ) {
     Box(
         modifier = modifier
@@ -322,7 +324,22 @@ fun ClassTest(lessonViewModel: LessonViewModel) {
             top = 35.convertSize()
         ),
     ) {
+        item {
+            TestImageUploadItem(
+                modifier = Modifier.padding(bottom = 35.convertSize()),
+                name = "王十二",
+                images = arrayListOf(
+                    "https://gips3.baidu.com/it/u=3886271102,3123389489&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960",
+                    "https://gips0.baidu.com/it/u=1690853528,2506870245&fm=3028&app=3028&f=JPEG&fmt=auto?w=1024&h=1024"
+                ),
+            ) {
+                // 上传图片
+
+
+            }
+        }
         items(classTestPaperList.size) {
+//        items(1) {
             classTestPaperList.get(it).let { testPaper->
                 TestImageUploadItem(
                     modifier = Modifier.padding(bottom = 35.convertSize()),

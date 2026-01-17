@@ -10,12 +10,17 @@ import com.hx.wangchao.Entity.LoginRequest
 import com.hx.wangchao.api.BaseApiService
 import com.hx.wangchao.api.ClassTableApiService
 import com.hx.wangchao.api.LessonApiService
+import com.hx.wangchao.api.OSSApiService
 import com.hx.wangchao.api.PermissionApiService
 import com.hx.wangchao.api.TodoApiService
+import okhttp3.MultipartBody
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
+import retrofit2.http.Url
 
 /**
  * api的仓库
@@ -36,6 +41,9 @@ object ApiRepository {
 
     private val lessonApiService =
         retrofitFlowWrapper.create(Constants.BASE_URL, LessonApiService::class.java)
+
+    private val ossApiService =
+        retrofitFlowWrapper.create(Constants.BASE_URL, OSSApiService::class.java)
 
 
     // 登录
@@ -131,7 +139,7 @@ object ApiRepository {
 
     // 出勤点名
     suspend fun callAttendance(
-       data: AttendanceSubmitEntity
+        data: AttendanceSubmitEntity
     ) = retrofitFlowWrapper.makeApiRequest(
         todoApiService.callAttendance(
             Constants.getUserToken(),
@@ -148,7 +156,7 @@ object ApiRepository {
     // Lesson上课表现增加
     suspend fun addLessonPerformance(data: AddPerformanceEntity) =
         retrofitFlowWrapper.makeApiRequest(
-            lessonApiService.addLessonPerformance(Constants.getUserToken(),data)
+            lessonApiService.addLessonPerformance(Constants.getUserToken(), data)
         )
 
     // 布置作业
@@ -177,6 +185,22 @@ object ApiRepository {
                 lessonId
             )
         )
+
+    //  第一步：获取预签名上传URL
+    suspend fun getPresignedPutUrl(objectName: String) = retrofitFlowWrapper.makeApiRequest(
+        ossApiService.getPresignedPutUrl(Constants.getUserToken(),objectName)
+    )
+
+    // 第二步：获取对象访问 URL
+    suspend fun uploadFileToOSS(
+        url: String,
+        file: MultipartBody.Part
+    ) = retrofitFlowWrapper.makeApiRequest(
+        ossApiService.uploadFileToOSS(
+            url,
+            file
+        )
+    )
 
 
 }

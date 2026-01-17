@@ -85,6 +85,9 @@ class MainActivity : BaseAppActivity() {
     // 课堂相关的ViewModel
     val lessonViewModel by lazy { ViewModelProvider(this)[com.hx.wangchao.viewModels.LessonViewModel::class.java] }
 
+    // 上传文件的ViewModel
+    val ossViewModel by lazy { ViewModelProvider(this)[com.hx.wangchao.viewModels.OSSViewModel::class.java] }
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -182,7 +185,8 @@ class MainActivity : BaseAppActivity() {
                                     .weight(1f, fill = true),
                                 userName = userName, todoTaskList,
                                 mainViewModel,
-                                lessonViewModel
+                                lessonViewModel,
+                                ossViewModel
                             )
                         }
 
