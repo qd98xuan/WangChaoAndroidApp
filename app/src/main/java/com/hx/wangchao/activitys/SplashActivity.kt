@@ -50,7 +50,7 @@ class SplashActivity : BaseAppActivity() {
                     if (it.code == 200) {
                         startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                         finish()
-                    } else if (it.code == 500) {
+                    } else if (it.code == 401) {
                         startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
                         finish()
                     } else {

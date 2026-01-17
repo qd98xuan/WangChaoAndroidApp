@@ -87,6 +87,10 @@ fun TodoTask(
             var todoSelect by remember {
                 mutableStateOf(todoTaskList[0].taskTitle)
             }
+            // 作业明细
+            val homeworkDetail by remember {
+                lessonViewModel.homeworkDetail
+            }
             LazyVerticalGrid(
                 GridCells.Fixed(3),
                 modifier = Modifier
@@ -106,11 +110,15 @@ fun TodoTask(
                     ) {
                         todoSelect = todoTaskList[index].taskTitle
                         when (todoSelect) {
-                            "课堂测验" -> {}
+                            "课堂测验" -> {
+                                lessonViewModel.getLessonTestPaperList(lessonViewModel.lessonId)
+                            }
                             "课堂表现" -> {
                                 lessonViewModel.getLessonPerformanceList()
                             }
-                            "布置作业" -> {}
+                            "布置作业" -> {
+                                lessonViewModel.getHomeworkDetail(lessonViewModel.lessonId)
+                            }
                             "作业检查" -> {}
                             "课照上传" -> {}
                         }
@@ -119,15 +127,23 @@ fun TodoTask(
             }
             // 判断选择的哪个待办
             when (todoSelect) {
-                "课堂测验" -> ClassTest()
+                "课堂测验" -> ClassTest(lessonViewModel)
                 "课堂表现" -> ClassPerformance(lessonViewModel)
                 "布置作业" -> AssignHomework(
                     modifier = Modifier.padding(
                         start = 35.convertSize(),
                         end = 35.convertSize(),
                         top = 35.convertSize()
-                    ), ""
-                ) {}
+                    ), homeworkDetail
+                ) {
+                    // 提交布置作业
+                    lessonViewModel.submitHomework(
+                        mapOf(
+                            Pair("lessonId",lessonViewModel.lessonId),
+                            Pair("homework",it)
+                        )
+                    )
+                }
 
                 "作业检查" -> HomeworkCheck()
                 "课照上传" -> ClassPhotoUpload()
@@ -295,7 +311,10 @@ fun ClassPerformanceItem(
 
 // 课堂检测
 @Composable
-fun ClassTest() {
+fun ClassTest(lessonViewModel: LessonViewModel) {
+    val classTestPaperList = remember {
+        lessonViewModel.classTestPaperList
+    }
     LazyColumn(
         modifier = Modifier.padding(
             start = 35.convertSize(),
@@ -303,16 +322,18 @@ fun ClassTest() {
             top = 35.convertSize()
         ),
     ) {
-        items(20) {
-            TestImageUploadItem(
-                modifier = Modifier.padding(bottom = 35.convertSize()),
-                name = "王十二",
-                images = arrayListOf(
-                    "https://gips3.baidu.com/it/u=3886271102,3123389489&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960",
-                    "https://gips0.baidu.com/it/u=1690853528,2506870245&fm=3028&app=3028&f=JPEG&fmt=auto?w=1024&h=1024"
-                ),
-            ) {
+        items(classTestPaperList.size) {
+            classTestPaperList.get(it).let { testPaper->
+                TestImageUploadItem(
+                    modifier = Modifier.padding(bottom = 35.convertSize()),
+                    name = "王十二",
+                    images = arrayListOf(
+                        "https://gips3.baidu.com/it/u=3886271102,3123389489&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960",
+                        "https://gips0.baidu.com/it/u=1690853528,2506870245&fm=3028&app=3028&f=JPEG&fmt=auto?w=1024&h=1024"
+                    ),
+                ) {
 
+                }
             }
         }
         item {

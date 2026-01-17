@@ -1,6 +1,7 @@
 package com.hx.wangchao.viewModels
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hx.baselibrary.network.Result
@@ -46,6 +47,69 @@ class LessonViewModel : ViewModel() {
                 when (it) {
                     is Result.Success<*> -> {
 
+                    }
+
+                    is Result.Error -> {
+
+                    }
+
+                    is Result.Loading -> {
+                    }
+                }
+            }
+        }
+    }
+
+    // 布置作业
+    fun submitHomework(body: Map<String, String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            ApiRepository.submitHomework(body).collect {
+                when (it) {
+                    is Result.Success<*> -> {
+
+                    }
+
+                    is Result.Error -> {
+
+                    }
+
+                    is Result.Loading -> {
+                    }
+                }
+            }
+        }
+    }
+
+    // 获取作业明细
+    val homeworkDetail = mutableStateOf("")
+    fun getHomeworkDetail(lessonId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            ApiRepository.getHomeworkDetail(lessonId).collect {
+                when (it) {
+                    is Result.Success<*> -> {
+                        homeworkDetail.value = it.data as String
+                    }
+
+                    is Result.Error -> {
+
+                    }
+
+                    is Result.Loading -> {
+                    }
+                }
+            }
+        }
+    }
+
+    // 课堂检测列表
+    val classTestPaperList = mutableStateListOf<LessonPerformanceEntity>()
+    fun getLessonTestPaperList(lessonId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            ApiRepository.getLessonTestPaperList(lessonId).collect {
+                when (it) {
+                    is Result.Success<*> -> {
+                        classTestPaperList.clear()
+                        classTestPaperList.addAll(it.data as ArrayList<LessonPerformanceEntity>)
                     }
 
                     is Result.Error -> {

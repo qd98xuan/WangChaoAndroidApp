@@ -151,4 +151,32 @@ object ApiRepository {
             lessonApiService.addLessonPerformance(Constants.getUserToken(),data)
         )
 
+    // 布置作业
+    suspend fun submitHomework(body: Map<String, String>) =
+        retrofitFlowWrapper.makeApiRequest(
+            lessonApiService.submitHomework(
+                Constants.getUserToken(),
+                body
+            )
+        )
+
+    // 获取作业明细
+    suspend fun getHomeworkDetail(lessonId: String) =
+        retrofitFlowWrapper.makeApiRequest(
+            lessonApiService.getHomeworkDetail(
+                Constants.getUserToken(),
+                lessonId
+            )
+        )
+
+    // 课堂检测列表
+    suspend fun getLessonTestPaperList(lessonId: String) =
+        retrofitFlowWrapper.makeApiRequest(
+            lessonApiService.getLessonTestPaperList(
+                Constants.getUserToken(),
+                lessonId
+            )
+        )
+
+
 }
